@@ -1,0 +1,89 @@
+.specialSection {
+  background: #f7f7f7 url('/bg-food.png') repeat;
+  background-size: cover;
+  padding: 64px 0 48px 0;
+  position: relative;
+}
+.specialSection::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  opacity: 0.91;
+  pointer-events: none;
+  z-index: 0;
+}
+.centered {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  position: relative;
+  z-index: 1;
+}
+.heading {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: #18181b;
+}
+.subheading {
+  font-size: 1.1rem;
+  color: #444;
+  font-weight: 400;
+  max-width: 800px;
+  margin: 0 auto 1.5rem auto;
+}
+.featuresGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem 3rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+@media (max-width: 900px) {
+  .featuresGrid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+.feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.2rem;
+  background: transparent;
+  padding: 0.5rem 0 1.5rem 0;
+  border-radius: 10px;
+  position: relative;
+}
+.checkIcon {
+  min-width: 48px;
+  min-height: 48px;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.featureContent {
+  flex: 1 1 0%;
+}
+.featureTitle {
+  color: #fbbf24;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.2em;
+}
+.featureDesc {
+  color: #23262b;
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-bottom: 0.5em;
+}
+.goldLine {
+  width: 48px;
+  height: 2.5px;
+  background: #fbbf24;
+  margin: 0.75rem 0 0.5rem 0;
+  border-radius: 2px;
+} 

@@ -1,0 +1,130 @@
+.servicesSection {
+  background: #f7f7f7;
+  padding: 64px 0 48px 0;
+}
+.centered {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+.heading {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 0.5rem;
+  color: #18181b;
+}
+.subheading {
+  font-size: 1rem;
+  color: #444;
+  font-weight: 400;
+  max-width: 700px;
+  margin: 0 auto 1.5rem auto;
+}
+.goldLine {
+  width: 48px;
+  height: 3px;
+  background: #fbbf24;
+  margin: 0.75rem auto 0.5rem auto;
+  border-radius: 2px;
+}
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+}
+.card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.07);
+  overflow: hidden;
+  max-width: 370px;
+  min-width: 300px;
+  flex: 1 1 320px;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s;
+}
+.card:hover {
+  box-shadow: 0 6px 32px 0 rgba(0,0,0,0.13);
+}
+.cardHeader {
+  background: #23262b;
+  color: #fbbf24;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 2rem 2rem 1.2rem 2rem;
+  border-bottom: 1px solid #23262b;
+  position: relative;
+}
+.cardHeader .goldLine {
+  margin: 0.75rem 0 0.5rem 0;
+}
+.cardSub {
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 400;
+  margin-bottom: 0.5rem;
+}
+.cardBody {
+  padding: 1.5rem 2rem 2rem 2rem;
+  background: #fff;
+  color: #23262b;
+  font-size: 0.9rem;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.cardBody ul {
+  margin-bottom: 0.5rem;
+  padding-left: 1.2em;
+}
+.cardBody li {
+  margin-bottom: 0.4em;
+  list-style: disc;
+}
+.cardBody .price {
+  margin-top: 0.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+.cardBody .price small {
+  font-size: 0.95rem;
+  font-weight: 400;
+  color: #444;
+  font-style: italic;
+  margin-right: 0.3em;
+}
+.cardBody .price strong {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-right: 0.2em;
+}
+.cardBody .knowMoreBtn {
+  margin-top: 1.5em;
+  border: 1.5px solid #fbbf24;
+  color: #23262b;
+  background: #fff;
+  border-radius: 8px;
+  padding: 0.8em 0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: background 0.18s, color 0.18s;
+  cursor: pointer;
+  width: 100%;
+  letter-spacing: 0.01em;
+}
+.cardBody .knowMoreBtn:hover {
+  background: #fbbf24;
+  color: #23262b;
+}
+@media (max-width: 1100px) {
+  .cards {
+    flex-direction: column;
+    align-items: center;
+  }
+  .card {
+    max-width: 95vw;
+    min-width: 0;
+  }
+} 
