@@ -1,11 +1,6 @@
-'use client';
-
 import styles from './services.module.css';
-import { useRouter } from 'next/navigation';
 
 export default function Services() {
-  const router = useRouter();
-
   return (
     <section className={styles.servicesSection} id="services">
       <div className={styles.centered}>
@@ -32,7 +27,7 @@ export default function Services() {
             </ul>
             <div>Reserve your chef today for a truly memorable celebration.</div>
             <div className={styles.price}><small>Starting from</small><strong> ₹2000</strong>/visit</div>
-            <button className={styles.knowMoreBtn} onClick={() => router.push('/booking-details')}>Know More</button>
+            <button className={styles.knowMoreBtn}>Know More</button>
           </div>
         </div>
         {/* Card 2 */}
@@ -51,7 +46,7 @@ export default function Services() {
             </ul>
             <div>Book now and let us serve perfection on your plate.</div>
             <div className={styles.price}><small>Starting from</small><strong> ₹699</strong>/person</div>
-            <button className={styles.knowMoreBtn} onClick={() => router.push('/booking-details')}>Know More</button>
+            <button className={styles.knowMoreBtn}>Know More</button>
           </div>
         </div>
         {/* Card 3 */}
@@ -70,7 +65,7 @@ export default function Services() {
             </ul>
             <div>Book a Bartender & Experience Mixology Perfection</div>
             <div className={styles.price}><small>Starting from</small><strong> ₹999</strong>/visit</div>
-            <button className={styles.knowMoreBtn} onClick={() => router.push('/booking-details')}>Know More</button>
+            <button className={styles.knowMoreBtn}>Know More</button>
           </div>
         </div>
       </div>
