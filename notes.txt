@@ -1,0 +1,7 @@
+1)adult and children, dynamic price, age included.
+2)menu selection, course classification on the page itself
+3)token 199
+4)login page, profile section, history section, email authentication
+5)admin page, token if paid->record->finalized booking, admin page order close->50 percent of the amount to be done through the gateway,
+execution close,final payment(paid by cash/UPI) -> feedback section for customer to be shown in the admin panel
+6) cook name in profile section
