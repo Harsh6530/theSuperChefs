@@ -13,10 +13,13 @@ export default function Page() {
         amount: 100,
       });
 
+      console.log(response)
+
       window.open(
         response.data.data.instrumentResponse.redirectInfo.url,
         "_blank"
       );
+
     } catch (error) {
       console.error("Error making API request:", error);
     }

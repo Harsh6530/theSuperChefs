@@ -29,16 +29,16 @@ export async function POST(req) {
     const response = await axios.request(options);
 
     if (response.data.code === "PAYMENT_SUCCESS") {
-      return NextResponse.redirect(`http://localhost:3000/success?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}`, {
+      return NextResponse.redirect(`http://localhost:3000/paymentgateway/success?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}`, {
         status: 301,
       });
     } else {
-      return NextResponse.redirect(`http://localhost:3000/failure?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}`, {
+      return NextResponse.redirect(`http://localhost:3000/paymentgateway/failure?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}`, {
         status: 301,
       });
     }
   } catch (error) {
     console.error(error);
-    return NextResponse.redirect(`http://localhost:3000/failure?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}`, { status: 301 });
+    return NextResponse.redirect(`http://localhost:3000/paymentgateway/failure?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}`, { status: 301 });
   }
 }

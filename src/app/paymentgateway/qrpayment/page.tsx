@@ -2,7 +2,7 @@
 
 import React from "react";
 import axios from "axios";
-import QRCode from "qrcode.react";
+import { QRCodeSVG } from "qrcode.react";
 
 export default function Page() {
   const size = 128;
@@ -16,6 +16,8 @@ export default function Page() {
         amount: 100,
       });
 
+      console.log(response)
+
       setQrData(response.data.data.instrumentResponse.intentUrl);
     } catch (error) {
       console.error("Error making API request:", error);
@@ -25,9 +27,16 @@ export default function Page() {
   return (
     <div className="flex flex-col justify-start items-start gap-40">
       <button onClick={handleClick}>Click me</button>
-      {qrData && <QRCode value={qrData} size={size} />}
+      {qrData && (
+        <QRCodeSVG
+          value={qrData}
+          size={size}
+        />
+      )}
 
-      <a href={qrData} target="_blank">
+      <a
+        href={qrData}
+        target="_blank">
         Pay Using UPI Apps
       </a>
     </div>

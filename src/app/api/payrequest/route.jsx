@@ -1,7 +1,7 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import crypto from "crypto-js";
+import CryptoJS from 'crypto-js';
 import axios from "axios";
 
 export async function POST(req) {
@@ -23,9 +23,9 @@ export async function POST(req) {
     const data2 = JSON.stringify(apidata);
     const base64data = Buffer.from(data2).toString("base64");
 
-    const hash = crypto
+    const hash = CryptoJS
       .SHA256(base64data + "/pg/v1/pay" + process.env.NEXT_API_MERCHANT_KEY)
-      .toString(crypto.enc.Hex);
+      .toString(CryptoJS.enc.Hex);
     const verify = hash + "###" + process.env.NEXT_API_MERCHANT_VERSION;
 
     const response = await axios.post(
