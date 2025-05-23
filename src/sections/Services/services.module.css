@@ -114,6 +114,24 @@
   width: 100%;
   letter-spacing: 0.01em;
 }
+
+.cardBody .bookNowBtn {
+  margin-top: 1.5em;
+  border: 1.5px solid #fbbf24;
+  color: #23262b;
+  background: #fbbf24;
+  border-radius: 8px;
+  padding: 0.8em 0;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: background 0.18s, color 0.18s;
+  cursor: pointer;
+  width: 100%;
+}
+.cardBody .bookNowBtn:hover {
+  background: #23262b;
+  color: #fbbf24;
+}
 .cardBody .knowMoreBtn:hover {
   background: #fbbf24;
   color: #23262b;
