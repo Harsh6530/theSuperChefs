@@ -1,0 +1,375 @@
+.popup {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: white;
+  border-radius: 20px 20px 0 0;
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  animation: slideUp 0.3s ease-out;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.itemsPopup,
+.detailsPopup {
+  height: 75vh;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.popupHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #f0f0f0;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 5;
+  border-radius: 20px 20px 0 0;
+}
+
+.popupHeader h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #333;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  color: #666;
+  transition: background-color 0.2s;
+}
+
+.closeButton:hover {
+  background-color: #f5f5f5;
+}
+
+.popupContent {
+  padding: 20px;
+  flex: 1;
+}
+
+.scrollableContent {
+  overflow-y: auto;
+  max-height: calc(75vh - 140px);
+}
+
+.scrollableContent::-webkit-scrollbar {
+  width: 6px;
+}
+
+.scrollableContent::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.scrollableContent::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 10px;
+}
+
+.popupDescription {
+  margin-bottom: 20px;
+  color: #666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.selectionItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  transition: border-color 0.2s;
+}
+
+.selectionItem:hover {
+  border-color: #ff8c1a;
+}
+
+.selectionLabel {
+  font-weight: 600;
+  color: #333;
+}
+
+.counter {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.counterButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid #eee;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #333;
+}
+
+.counterButton:hover:not(:disabled) {
+  background-color: #f5f5f5;
+  border-color: #ddd;
+}
+
+.counterButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.counterValue {
+  font-weight: 600;
+  font-size: 1.1rem;
+  min-width: 20px;
+  text-align: center;
+}
+
+.popupFooter {
+  padding: 15px 20px;
+  border-top: 1px solid #f0f0f0;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  background-color: white;
+  position: sticky;
+  bottom: 0;
+}
+
+.doneButton,
+.payButton {
+  background-color: #ff8c1a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 25px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 2px 8px rgba(255, 140, 26, 0.3);
+}
+
+.doneButton:hover,
+.payButton:hover {
+  background-color: #e67e00;
+}
+
+.payButton {
+  width: 100%;
+}
+
+/* Items popup specific styles */
+.category {
+  margin-bottom: 25px;
+}
+
+.categoryTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: #333;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #ff8c1a;
+}
+
+.itemsList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.itemCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.itemCard:hover {
+  border-color: #ff8c1a;
+  background-color: #fff9f2;
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.itemName {
+  font-weight: 500;
+  color: #333;
+}
+
+.itemPrice {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.checkbox {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.checked {
+  background-color: #ff8c1a;
+  border-color: #ff8c1a;
+  color: white;
+}
+
+.selectedCount {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #666;
+  margin-right: auto;
+}
+
+/* Details popup specific styles */
+.detailsSection {
+  margin-bottom: 25px;
+}
+
+.detailsSectionTitle {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.detailsRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 0.95rem;
+}
+
+.detailsRow:last-child {
+  border-bottom: none;
+}
+
+.categoryItems {
+  margin-bottom: 15px;
+}
+
+.categoryItemsTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 10px 0;
+  color: #555;
+}
+
+.totalSection {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 2px solid #f0f0f0;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+/* Time popup specific styles */
+.timeSlotContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.timeSlot {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 15px;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background-color: white;
+  width: calc(33.33% - 10px);
+  box-sizing: border-box;
+}
+
+.timeSlot:hover {
+  border-color: #ff8c1a;
+  background-color: #fff9f2;
+}
+
+.selectedTimeSlot {
+  background-color: #ff8c1a;
+  color: white;
+  border-color: #ff8c1a;
+}
+
+.selectedTimeSlot .timeIcon {
+  color: white;
+}
+
+.timeIcon {
+  color: #666;
+}
+
+.selectedInfo {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #666;
+  margin-right: auto;
+}
+
+.detailWithIcon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detailIcon {
+  color: #666;
+}
+
+@media (max-width: 600px) {
+  .timeSlot {
+    width: calc(50% - 10px);
+  }
+}

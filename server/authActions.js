@@ -1,6 +1,7 @@
 import connectDb from "../middleware/connectDb";
 import userSchema from "../models/userSchema";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 export async function login(data) {
   try {
@@ -20,25 +21,34 @@ export async function login(data) {
       };
     }
 
-    bcrypt.compare(password, response.password, (err, result) => {
-      if (err) {
-        throw err;
-      }
+    const isMatch = await bcrypt.compare(password, response.password);
+    
+    if (isMatch) {
+      const token = jwt.sign(
+        {
+          email: response.email,
+          name: response.name,
+        },
+        process.env.JWT_SECRET_KEY,
+        { expiresIn: "2d" }
+      );
 
-      if (result) {
-        return {
-          success: true,
-          status: 200,
-          message: "Succesfully Logged In",
-        };
-      } else {
-        return {
-          success: false,
-          status: 401,
-          message: "Wrong Password",
-        };
-      }
-    });
+      return {
+        success: true,
+        status: 200,
+        message: "Succesfully Logged In",
+        name: response.name,
+        email: response.email,
+        mobile: response.mobile,
+        token,
+      };
+    } else {
+      return {
+        success: false,
+        status: 401,
+        message: "Wrong Password",
+      };
+    }
   } catch (error) {
     console.log(error);
     return {
@@ -74,7 +84,7 @@ export async function signup(data) {
       name,
       email,
       password: hashedPassword,
-      mobile
+      mobile,
     });
 
     await newUser.save();
