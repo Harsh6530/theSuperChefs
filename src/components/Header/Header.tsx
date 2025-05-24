@@ -1,6 +1,10 @@
 import Image from "next/image";
 import styles from "./Header.module.css";
 import { Menu } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useSelector, useDispatch } from "react-redux";
+import { checkAuth } from "../../../redux/auth/authSlice";
+import type { RootState } from "../../../redux/store";
 
 interface HeaderProps {
   currentPage?: string;
@@ -8,6 +12,7 @@ interface HeaderProps {
 }
 
 export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
   return (
     <header className={`${styles.header} sticky top-0 z-50`}>
       {/* Top Bar */}
@@ -102,11 +107,20 @@ export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
             }`}>
             Contact us
           </a>
-          <button
-            className={styles.menuButton}
-            onClick={() => setSidebarOpen(true)}>
-            <Menu size={24} />
-          </button>
+          {isLoggedIn ? (
+            <button
+              onClick={() => setSidebarOpen(true)}>
+              <Menu size={24} />
+            </button>
+          ) : (
+            <a
+              href="auth/login"
+              className={`${styles.navBtn} ${
+                currentPage === "contact" ? styles.activeNav : ""
+              }`}>
+              Login
+            </a>
+          )}
         </nav>
       </div>
     </header>

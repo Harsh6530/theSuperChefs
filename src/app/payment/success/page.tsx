@@ -44,8 +44,8 @@ const SuccessPage = () => {
     }
 
     alert("Order Succesfully Created");
-    localStorage.removeItem('order-data');
-    localStorage.setItem("payment","Successful")
+    localStorage.removeItem("order-data");
+    localStorage.setItem("payment", "Successful");
   };
 
   useEffect(() => {
@@ -70,17 +70,7 @@ const SuccessPage = () => {
       referenceId: providerId,
       status: "Success",
     });
-  }, [searchParams]);
 
-  const handleDownloadReceipt = () => {
-    alert("Receipt download functionality would be implemented here");
-  };
-
-  const handleGoHome = () => {
-    router.push("/");
-  };
-
-  useEffect(() => {
     const userString = localStorage.getItem("Credentials");
     const orderDataString = localStorage.getItem("order-data");
     const user = userString ? JSON.parse(userString) : null;
@@ -97,10 +87,20 @@ const SuccessPage = () => {
       items: order_data.items_data,
       mobile: user.mobile,
       total: order_data.amount,
+      txn_id: txnId,
+      ref_id: providerId,
     };
 
     createOrder(orderData);
-  }, []);
+  }, [searchParams]);
+
+  const handleDownloadReceipt = () => {
+    alert("Receipt download functionality would be implemented here");
+  };
+
+  const handleGoHome = () => {
+    router.push("/");
+  };
 
   return (
     <div className={styles.container}>
