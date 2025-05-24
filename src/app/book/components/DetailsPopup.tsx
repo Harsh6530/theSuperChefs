@@ -3,6 +3,7 @@
 import type React from "react"
 import styles from "../styles/popup.module.css"
 import { X } from "lucide-react"
+import { useRouter } from 'next/navigation';
 
 interface Item {
   id: number
@@ -19,6 +20,7 @@ interface DetailsPopupProps {
 }
 
 const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedItems, totalAmount }) => {
+  const router = useRouter()
   const basePrice = 199
 
   // Group items by category
@@ -91,7 +93,7 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedI
       </div>
 
       <div className={styles.popupFooter}>
-        <button className={styles.payButton}>Pay ₹199 for Booking</button>
+        <button className={styles.payButton} onClick={()=>router.push('/payment')}>Pay ₹199 for Booking</button>
       </div>
     </div>
   )

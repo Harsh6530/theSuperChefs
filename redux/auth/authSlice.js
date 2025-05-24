@@ -23,6 +23,7 @@ export const authSlice = createSlice({
 
       if (typeof window !== "undefined") {
         localStorage.setItem("userToken", action.payload.token);
+        localStorage.setItem("Credentials",JSON.stringify(action.payload.user));
       }
     },
     loginFailure: (state, action) => {

@@ -22,6 +22,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/paymentgateway/layout.js", "src/app/paymentgateway/failure/page.jsx", "src/app/paymentgateway/success/page.jsx", "src/app/paymentgateway/page.tsx"],
   "exclude": ["node_modules"]
 }

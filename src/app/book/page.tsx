@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import styles from "./book.module.css";
 import MembersPopup from "./components/MembersPopup";
 import ItemsPopup from "./components/ItemsPopup";
@@ -10,10 +10,15 @@ import { ArrowLeft, ChevronDown, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { checkAuth } from "../../../redux/auth/authSlice";
+import { dataContext } from "../context/dataContext";
+import { useContext } from "react";
 
 const Page = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { totalData, setTotalData, dateTime, setDateTime } =
+    useContext(dataContext);
+
   interface RootState {
     auth: {
       isLoggedIn: boolean;
@@ -24,12 +29,6 @@ const Page = () => {
         phone: string;
       };
     };
-  }
-
-  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
-
-  if (!isLoggedIn) {
-    router.push("/auth/login");
   }
 
   useEffect(() => {
@@ -67,44 +66,28 @@ const Page = () => {
     setSelectedItems(items);
     const itemsTotal = items.reduce((sum, item) => sum + item.price, 0);
     setTotalAmount(0 + itemsTotal);
+    setTotalData(0 + itemsTotal);
   };
 
   const user = useSelector((state: RootState) => state.auth.user);
 
-  const handleCreateOrder = async () => {
-    const orderData = {
-      user: user.name,
-      date: dates[selectedDate],
-      time: selectedTime,
-      members: {
-        adults: guests.adults,
-        children: guests.children,
-      },
-      items: selectedItems,
-      mobile: user.phone,
-      total: totalAmount,
-    };
+  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
-    const response = await fetch("/api/order", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ orderData }),
+  const hasPushed = useRef(false);
+
+  if (!isLoggedIn && typeof window !== "undefined" && !hasPushed.current) {
+    hasPushed.current = true;
+    Promise.resolve().then(() => {
+      router.push("/auth/login");
     });
+  }
 
-    const data = await response.json();
-
-    if (!data?.success) {
-      console.error("Failed to create order");
-      return;
-    }
-
-    alert("Order created successfully");
+  const selectDate = (index) => {
+    setSelectedDate(index);
+    setDateTime({ ...dateTime, date: dates[index] });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const validator = () => {
     if (
       selectedDate === null ||
       selectedTime === "" ||
@@ -114,15 +97,21 @@ const Page = () => {
       alert("Please fill all the details");
       return;
     }
-    handleCreateOrder();
+    setPopup("details");
   };
+
+  useEffect(() => {
+    setDateTime({ ...dateTime, date: dates[0] });
+  }, []);
 
   return (
     <div className={styles.container}>
       <div className={styles.wrapper}>
         <div className={styles.white_bg}>
           <header className={styles.header}>
-            <button className={styles.backButton}>
+            <button
+              className={styles.backButton}
+              onClick={() => router.back()}>
               <ArrowLeft size={20} />
             </button>
             <p>Booking Details</p>
@@ -138,7 +127,9 @@ const Page = () => {
                       selectedDate === index ? styles.selected : ""
                     }`}
                     key={index}
-                    onClick={() => setSelectedDate(index)}>
+                    onClick={() => {
+                      selectDate(index);
+                    }}>
                     <p>{elem.month}</p>
                     <p className={styles.dateNum}>{elem.dateNum}</p>
                     <p>{elem.day}</p>
@@ -191,16 +182,13 @@ const Page = () => {
           <footer className={styles.footer}>
             <div className={styles.info}>
               <p className={styles.amount}>₹ {totalAmount}</p>
-              <p className={styles.payableText}>
-                Payable Amount{" "}
-                <span
-                  className={styles.detailsLink}
-                  onClick={() => setPopup("details")}>
-                  (DETAILS)
-                </span>
-              </p>
+              <p className={styles.payableText}>Payable Amount </p>
             </div>
-            <button className={styles.continueButton}>Continue</button>
+            <button
+              className={styles.continueButton}
+              onClick={() => validator()}>
+              Book
+            </button>
           </footer>
 
           {popup === "members" && (

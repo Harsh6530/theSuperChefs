@@ -28,6 +28,7 @@ export async function login(data) {
         {
           email: response.email,
           name: response.name,
+          phone:response.mobile,
         },
         process.env.JWT_SECRET_KEY,
         { expiresIn: "2d" }
