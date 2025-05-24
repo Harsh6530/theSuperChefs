@@ -24,11 +24,13 @@ export const createOrder = async (data) => {
   }
 };
 
-export const getOrders = async () => {
+export const getOrdersbyId = async (data) => {
   try {
+    console.log(data);
+    const { name, mobile } = data;
     const { chefConn } = await connectDb();
-    const Order = chefConn.model("Order", orderSchema);
-    const orders = await Order.find();
+    const Order = chefConn.model("orders", orderSchema);
+    const orders = await Order.find({ user: name, mobile });
 
     return {
       success: true,
@@ -44,5 +46,3 @@ export const getOrders = async () => {
     };
   }
 };
-
-
