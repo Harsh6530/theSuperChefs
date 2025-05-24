@@ -1,7 +1,7 @@
 "use client";
 
 import type React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import styles from "./login.module.css";
@@ -30,8 +30,13 @@ export default function Login() {
 
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
 
-  if (isLoggedIn) {
-    router.push("/book");
+  const hasPushed = useRef(false);
+
+  if (isLoggedIn && typeof window !== "undefined" && !hasPushed.current) {
+    hasPushed.current = true;
+    Promise.resolve().then(() => {
+      router.push("/");
+    });
   }
 
   useEffect(() => {
@@ -55,9 +60,9 @@ export default function Login() {
           loginSuccess({
             token: data.token,
             user: {
-              name: data.user.name,
-              email: data.user.email,
-              mobile: data.user.mobile,
+              name: data.name,
+              email: data.email,
+              mobile: data.mobile,
             },
           })
         );

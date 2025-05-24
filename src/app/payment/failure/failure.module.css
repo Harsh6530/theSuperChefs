@@ -1,0 +1,256 @@
+.container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f4f0;
+  padding: 20px 0;
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 500px;
+  min-height: 650px;
+  border-radius: 20px;
+  background-color: #dc3545;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  padding: 12px;
+}
+
+.white_bg {
+  background-color: white;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.content {
+  flex: 1;
+  padding: 30px 20px;
+  text-align: center;
+  overflow-y: auto;
+}
+
+.failureIcon {
+  color: #dc3545;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.failureMessage {
+  margin-bottom: 25px;
+}
+
+.failureMessage h1 {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.failureMessage p {
+  font-size: 1rem;
+  color: #666;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.errorInfo {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 25px;
+}
+
+.errorInfo h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #721c24;
+  margin-bottom: 8px;
+}
+
+.errorInfo p {
+  font-size: 0.9rem;
+  color: #721c24;
+  margin: 0;
+}
+
+.transactionDetails {
+  background-color: #f9f9f9;
+  border-radius: 15px;
+  padding: 20px;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.transactionDetails h2 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.detailsGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.detailItem {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px;
+  background-color: white;
+  border-radius: 8px;
+  border: 1px solid #eee;
+}
+
+.detailIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  color: #666;
+}
+
+.detailInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.detailLabel {
+  font-size: 0.85rem;
+  color: #888;
+  font-weight: 500;
+}
+
+.detailValue {
+  font-size: 0.95rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.failureStatus {
+  color: #dc3545;
+}
+
+.amountValue {
+  color: #ff8c1a;
+  font-size: 1.1rem;
+}
+
+.troubleshooting {
+  background-color: #fff3cd;
+  border: 1px solid #ffeaa7;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 25px;
+  text-align: left;
+}
+
+.troubleshooting h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #856404;
+  margin-bottom: 15px;
+}
+
+.troubleshooting ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.troubleshooting li {
+  font-size: 0.9rem;
+  color: #856404;
+  margin-bottom: 8px;
+  padding-left: 20px;
+  position: relative;
+}
+
+.troubleshooting li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #856404;
+  font-weight: bold;
+}
+
+.actionButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.retryButton,
+.differentMethodButton,
+.supportButton,
+.homeButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.retryButton {
+  background-color: #ff8c1a;
+  color: white;
+  box-shadow: 0 2px 8px rgba(255, 140, 26, 0.3);
+}
+
+.retryButton:hover {
+  background-color: #e67e00;
+}
+
+.differentMethodButton {
+  background-color: #007bff;
+  color: white;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+}
+
+.differentMethodButton:hover {
+  background-color: #0056b3;
+}
+
+.supportButton {
+  background-color: #28a745;
+  color: white;
+  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3);
+}
+
+.supportButton:hover {
+  background-color: #218838;
+}
+
+.homeButton {
+  background-color: #6c757d;
+  color: white;
+  box-shadow: 0 2px 8px rgba(108, 117, 125, 0.3);
+}
+
+.homeButton:hover {
+  background-color: #5a6268;
+}

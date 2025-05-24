@@ -1,4 +1,4 @@
-import orderSchema from "./models/orderModel.js";
+import orderSchema from "../models/orderSchema.js";
 import connectDb from "../middleware/connectDb.js";
 
 export const createOrder = async (data) => {
