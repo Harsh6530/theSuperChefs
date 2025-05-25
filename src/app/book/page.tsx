@@ -58,23 +58,45 @@ const Page = () => {
   const [selectedDate, setSelectedDate] = useState(0);
   const [selectedTime, setSelectedTime] = useState("");
   const [guests, setGuests] = useState({ adults: 0, children: 0 });
-  const [selectedItems, setSelectedItems] = useState<Item[]>([]);
-  const [totalAmount, setTotalAmount] = useState(0);
+  const [selectedItems, setSelectedItems] = useState<MenuItem[]>([]);
   const totalGuests = guests.adults + guests.children;
 
-  interface Item {
-    id: number;
-    name: string;
-    price: number;
-    category: string;
+  interface MenuItem {
+    _id: string;
+    Course_Type: string;
+    Classification: string;
+    Cuisine: string;
+    Dish_Name: string;
+    Remarks?: string;
   }
 
-  const handleItemSelection = (items: Item[]) => {
-    setSelectedItems(items);
-    const itemsTotal = items.reduce((sum: number, item: Item) => sum + item.price, 0);
-    setTotalAmount(0 + itemsTotal);
-    setTotalData(0 + itemsTotal);
+  // Pricing constants
+  const BASE_PRICE = 999;
+  const ADULT_PRICE = 100;
+  const CHILD_PRICE = 75;
+  const COURSE_PRICES: Record<string, number> = {
+    Starters: 299,
+    "Main Course": 299,
+    Sides: 149,
+    Desserts: 299,
+    Beverages: 149,
   };
+
+  // Calculate course totals
+  const courseCounts: Record<string, number> = {};
+  selectedItems.forEach(item => {
+    const course = item.Course_Type;
+    courseCounts[course] = (courseCounts[course] || 0) + 1;
+  });
+  let itemsTotal = 0;
+  Object.entries(courseCounts).forEach(([course, count]) => {
+    const price = COURSE_PRICES[course] || 0;
+    itemsTotal += count * price;
+  });
+
+  const guestsTotal = guests.adults * ADULT_PRICE + guests.children * CHILD_PRICE;
+  const somethingSelected = totalGuests > 0 || selectedItems.length > 0;
+  const totalAmount = somethingSelected ? BASE_PRICE + guestsTotal + itemsTotal : 0;
 
   const user = useSelector((state: RootState) => state.auth.user);
 
@@ -188,12 +210,16 @@ const Page = () => {
 
           <footer className={styles.footer}>
             <div className={styles.info}>
-              <p className={styles.amount}>₹ {totalAmount}</p>
-              <p className={styles.payableText}>Payable Amount </p>
+              {somethingSelected && <>
+                <p className={styles.amount}>₹ {totalAmount}</p>
+                <p className={styles.payableText}>Payable Amount </p>
+              </>}
             </div>
             <button
               className={styles.continueButton}
-              onClick={() => validator()}>
+              onClick={() => validator()}
+              disabled={!somethingSelected}
+            >
               Book
             </button>
           </footer>
@@ -209,8 +235,8 @@ const Page = () => {
           {popup === "items" && (
             <ItemsPopup
               setPopup={setPopup}
-              selectedItems={selectedItems}
-              onItemsSelected={handleItemSelection}
+              selectedItems={selectedItems as any}
+              onItemsSelected={setSelectedItems as any}
             />
           )}
 
@@ -228,6 +254,10 @@ const Page = () => {
               guests={guests}
               selectedItems={selectedItems}
               totalAmount={totalAmount}
+              courseCounts={courseCounts}
+              guestsTotal={guestsTotal}
+              itemsTotal={itemsTotal}
+              BASE_PRICE={BASE_PRICE}
             />
           )}
         </div>
