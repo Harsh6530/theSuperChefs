@@ -18,8 +18,8 @@ interface MenuItem {
 
 interface ItemsPopupProps {
   setPopup: (value: string) => void;
-  selectedItems: MenuItem[];
-  onItemsSelected: (items: MenuItem[]) => void;
+  selectedItems: any[];
+  onItemsSelected: (items: any[]) => void;
 }
 
 const ItemsPopup: React.FC<ItemsPopupProps> = ({
@@ -73,6 +73,34 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
     setPopup("");
   };
 
+  const COURSE_LABELS: Record<string, string> = {
+    Soups: "Soups",
+    Starter: "Starters",
+    Starters: "Starters",
+    Mains: "Main Course",
+    "Main Course": "Main Course",
+    Sides: "Sides",
+    Desserts: "Desserts",
+    Dessert: "Desserts",
+    Beverages: "Beverages",
+  };
+  const COURSE_PRICES: Record<string, number> = {
+    Soups: 149,
+    Starters: 299,
+    "Main Course": 299,
+    Sides: 149,
+    Desserts: 299,
+    Beverages: 149,
+  };
+  const allCourses = ["Soups", "Starters", "Main Course", "Sides", "Desserts", "Beverages"];
+
+  // Calculate course counts for footer summary
+  const courseCounts: Record<string, number> = {};
+  selected.forEach(item => {
+    const label = COURSE_LABELS[item.Course_Type] || item.Course_Type;
+    courseCounts[label] = (courseCounts[label] || 0) + 1;
+  });
+
   if (loading) return <div>Loading menu...</div>;
   if (error) return <div style={{ color: 'red', padding: 16 }}>{error}</div>;
 
@@ -107,7 +135,12 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
               }}
               onClick={() => setCollapsed(prev => ({ ...prev, [category]: !prev[category] }))}
             >
-              <span style={{ flex: 1 }}>{category}</span>
+              <span style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+                {COURSE_LABELS[category] || category}
+                <span style={{ color: '#ff8c1a', fontWeight: 500, fontSize: 14, marginLeft: 8 }}>
+                  (₹{COURSE_PRICES[COURSE_LABELS[category] || category] ?? 0})
+                </span>
+              </span>
               <span style={{ fontSize: 18, marginLeft: 8, transition: "transform 0.2s", transform: collapsed[category] ? "rotate(0deg)" : "rotate(180deg)" }}>
                 ▼
               </span>
@@ -165,7 +198,11 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
 
       <div className={styles.popupFooter}>
         <div className={styles.selectedCount}>
-          {selected.length} items selected
+          {allCourses.map(course => (
+            <span key={course} style={{ marginRight: 10 }}>
+              {course}: {courseCounts[course] || 0}
+            </span>
+          ))}
         </div>
         <button
           className={styles.doneButton}

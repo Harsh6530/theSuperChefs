@@ -59,13 +59,13 @@ const MembersPopup: React.FC<MembersPopupProps> = ({
       </div>
 
       <div className={styles.popupContent}>
-        <p className={styles.popupDescription}>
+        {/* <p className={styles.popupDescription}>
           We&apos;ll <strong>allow up to 2 extra people for free</strong> in
           case of any last-minute changes
-        </p>
+        </p> */}
 
         <div className={styles.selectionItem}>
-          <div className={styles.selectionLabel}>Adults</div>
+          <div className={styles.selectionLabel}>Adults <span style={{color:'#ff8c1a', fontWeight:500, fontSize:14}}>(₹100)</span></div>
           <div className={styles.counter}>
             <button
               className={styles.counterButton}
@@ -83,7 +83,7 @@ const MembersPopup: React.FC<MembersPopupProps> = ({
         </div>
 
         <div className={styles.selectionItem}>
-          <div className={styles.selectionLabel}>Children</div>
+          <div className={styles.selectionLabel}>Children <span style={{color:'#ff8c1a', fontWeight:500, fontSize:14}}>(₹75)</span></div>
           <div className={styles.counter}>
             <button
               className={styles.counterButton}

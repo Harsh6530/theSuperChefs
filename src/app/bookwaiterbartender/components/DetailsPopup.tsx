@@ -18,7 +18,8 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, numWaiters, numBa
   const WAITER_PRICE = 1500;
   const BARTENDER_PRICE = 2500;
   const BOOKING_FEE = 199;
-  let total = numWaiters * WAITER_PRICE + numBartenders * BARTENDER_PRICE;
+  const BASE_PRICE = 999;
+  let total = BASE_PRICE + numWaiters * WAITER_PRICE + numBartenders * BARTENDER_PRICE;
   let discount = 0;
   if (couponApplied) discount = Math.round(total * 0.15);
   const finalTotal = total - discount;
@@ -55,7 +56,11 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, numWaiters, numBa
           </div>
         </div>
         <div className={styles.detailsSection}>
-          <h3 className={styles.detailsSectionTitle}>Base Price</h3>
+          <h3 className={styles.detailsSectionTitle}>Pricing</h3>
+          <div className={styles.detailsRow}>
+            <span>Base Price</span>
+            <span>₹{BASE_PRICE}</span>
+          </div>
           <div className={styles.detailsRow}>
             <span>Booking Fee</span>
             <span>₹{BOOKING_FEE}</span>
@@ -80,7 +85,7 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, numWaiters, numBa
         </div>
       </div>
       <div className={styles.popupFooter}>
-        <button className={styles.payButton} onClick={() => router.push("/payment")}>Pay ₹199 for Booking</button>
+        <button className={styles.payButton} onClick={() => router.push("/payment")}>Pay ₹{BOOKING_FEE} for Booking</button>
       </div>
     </div>
   );

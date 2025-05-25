@@ -80,22 +80,46 @@ const Page = () => {
     Sides: 149,
     Desserts: 299,
     Beverages: 149,
+    Soups: 149,
   };
+
+  const COURSE_LABELS: Record<string, string> = {
+    Soups: "Soups",
+    Starter: "Starters",
+    Starters: "Starters",
+    Mains: "Main Course",
+    "Main Course": "Main Course",
+    Sides: "Sides",
+    Desserts: "Desserts",
+    Dessert: "Desserts",
+    Beverages: "Beverages",
+  };
+
+  // Deduplicate selectedItems by _id
+  const uniqueSelectedItems = Array.from(
+    new Map(selectedItems.map(item => [item._id, item])).values()
+  );
 
   // Calculate course totals
   const courseCounts: Record<string, number> = {};
-  selectedItems.forEach(item => {
-    const course = item.Course_Type;
+  uniqueSelectedItems.forEach(item => {
+    // Normalize the course name
+    const course = COURSE_LABELS[item.Course_Type] || item.Course_Type;
     courseCounts[course] = (courseCounts[course] || 0) + 1;
   });
+
+  // Calculate items total
   let itemsTotal = 0;
   Object.entries(courseCounts).forEach(([course, count]) => {
     const price = COURSE_PRICES[course] || 0;
     itemsTotal += count * price;
   });
 
+  // Calculate guests total
   const guestsTotal = guests.adults * ADULT_PRICE + guests.children * CHILD_PRICE;
-  const somethingSelected = totalGuests > 0 || selectedItems.length > 0;
+
+  // Calculate final total (excluding booking fee)
+  const somethingSelected = totalGuests > 0 || uniqueSelectedItems.length > 0;
   const totalAmount = somethingSelected ? BASE_PRICE + guestsTotal + itemsTotal : 0;
 
   const user = useSelector((state: RootState) => state.auth.user);
@@ -252,7 +276,7 @@ const Page = () => {
             <DetailsPopup
               setPopup={setPopup}
               guests={guests}
-              selectedItems={selectedItems}
+              selectedItems={uniqueSelectedItems}
               totalAmount={totalAmount}
               courseCounts={courseCounts}
               guestsTotal={guestsTotal}
