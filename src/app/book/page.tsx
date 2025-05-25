@@ -58,13 +58,20 @@ const Page = () => {
   const [selectedDate, setSelectedDate] = useState(0);
   const [selectedTime, setSelectedTime] = useState("");
   const [guests, setGuests] = useState({ adults: 0, children: 0 });
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState<Item[]>([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const totalGuests = guests.adults + guests.children;
 
-  const handleItemSelection = (items) => {
+  interface Item {
+    id: number;
+    name: string;
+    price: number;
+    category: string;
+  }
+
+  const handleItemSelection = (items: Item[]) => {
     setSelectedItems(items);
-    const itemsTotal = items.reduce((sum, item) => sum + item.price, 0);
+    const itemsTotal = items.reduce((sum: number, item: Item) => sum + item.price, 0);
     setTotalAmount(0 + itemsTotal);
     setTotalData(0 + itemsTotal);
   };
@@ -82,7 +89,7 @@ const Page = () => {
     });
   }
 
-  const selectDate = (index) => {
+  const selectDate = (index: number) => {
     setSelectedDate(index);
     setDateTime({ ...dateTime, date: dates[index] });
   };

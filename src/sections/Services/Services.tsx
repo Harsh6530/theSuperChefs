@@ -8,6 +8,11 @@ export default function Services() {
   const handleBookNow = () => {
     router.push("/book");
   };
+
+  const handleBookNowWaiterBartender = () => {
+    router.push("/bookwaiterbartender");
+  };
+
   return (
     <section
       className={styles.servicesSection}
@@ -44,14 +49,14 @@ export default function Services() {
             </div>
             <div className={styles.price}>
               <small>Starting from</small>
-              <strong> ₹2000</strong>/visit
+              <strong> ₹1999</strong>/visit
             </div>
             <button
               className={styles.bookNowBtn}
               onClick={handleBookNow}>
               Book Now
             </button>
-            <button className={styles.knowMoreBtn}>Know More</button>
+            {/* <button className={styles.knowMoreBtn}>Know More</button> */}
           </div>
         </div>
         {/* Card 2 */}
@@ -81,7 +86,7 @@ export default function Services() {
               onClick={handleBookNow}>
               Book Now
             </button>
-            <button className={styles.knowMoreBtn}>Know More</button>
+            {/* <button className={styles.knowMoreBtn}>Know More</button> */}
           </div>
         </div>
         {/* Card 3 */}
@@ -104,14 +109,14 @@ export default function Services() {
             <div>Book a Bartender & Experience Mixology Perfection</div>
             <div className={styles.price}>
               <small>Starting from</small>
-              <strong> ₹999</strong>/visit
+              <strong> ₹1199</strong>/visit
             </div>
             <button
               className={styles.bookNowBtn}
-              onClick={handleBookNow}>
+              onClick={handleBookNowWaiterBartender}>
               Book Now
             </button>
-            <button className={styles.knowMoreBtn}>Know More</button>
+            {/* <button className={styles.knowMoreBtn}>Know More</button> */}
           </div>
         </div>
       </div>

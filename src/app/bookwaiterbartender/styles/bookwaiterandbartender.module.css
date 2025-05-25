@@ -1,0 +1,364 @@
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  color: #333;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+    "Helvetica Neue", sans-serif;
+}
+
+.container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f8f4f0;
+  padding: 20px 0;
+  margin: 32px 0;
+}
+
+.wrapper {
+  width: 100%;
+  max-width: 500px;
+  height: 650px;
+  border-radius: 20px;
+  background-color: #ff8c1a;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  padding: 12px;
+}
+
+.white_bg {
+  background-color: white;
+  width: 100%;
+  height: 100%;
+  border-radius: 15px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #f0f0f0;
+  background-color: white;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.backButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 50%;
+  margin-right: 15px;
+  color: #333;
+  transition: background-color 0.2s;
+}
+
+.backButton:hover {
+  background-color: #f5f5f5;
+}
+
+.header p {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #333;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 32px 100px 32px;
+}
+
+.content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.content::-webkit-scrollbar-thumb {
+  background: #ddd;
+  border-radius: 10px;
+}
+
+.date {
+  padding: 10px 20px;
+}
+
+.date_head {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.dates {
+  display: flex;
+  justify-content: space-between;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.date_element {
+  width: 18%;
+  font-weight: 500;
+  border-radius: 12px;
+  padding: 10px 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: 1px solid #eee;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.date_element:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.date_element p {
+  text-align: center;
+  margin: 5px 0;
+}
+
+.dateNum {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.selected {
+  background-color: #ff8c1a;
+  color: white;
+  border-color: #ff8c1a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(255, 140, 26, 0.3);
+}
+
+.selectionContainer {
+  padding: 10px 20px;
+}
+
+.selection {
+  margin-top: 2.2rem;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+
+.selection label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.selector {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+  color: #333;
+}
+
+.selector:hover {
+  border-color: #ff8c1a;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.selector p {
+  margin: 0;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border-top: 1px solid #f0f0f0;
+  box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+}
+
+.amount {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin: 0;
+  color: #333;
+}
+
+.payableText {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+}
+
+.detailsLink {
+  color: #ff8c1a;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.detailsLink:hover {
+  text-decoration: underline;
+}
+
+.continueButton {
+  background-color: #ff8c1a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 25px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  box-shadow: 0 2px 8px rgba(255, 140, 26, 0.3);
+}
+
+.continueButton:hover {
+  background-color: #e67e00;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #f7f7fa;
+  border-radius: 12px;
+  padding: 6px 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  width: fit-content;
+}
+
+.stepperBtn {
+  background: linear-gradient(90deg, #ffb347 0%, #ffcc33 100%);
+  border: none;
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  font-size: 1.5rem;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  box-shadow: 0 2px 6px rgba(255, 179, 71, 0.15);
+}
+
+.stepperBtn:active {
+  transform: scale(0.95);
+}
+
+.stepperBtn:disabled {
+  background: #eee;
+  color: #bbb;
+  cursor: not-allowed;
+}
+
+.stepperValue {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ff9800;
+  min-width: 24px;
+  text-align: center;
+}
+
+.selectionBox {
+  width: 100%;
+  background: #fff;
+  border: 1.5px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 18px 18px 10px 18px;
+  margin-bottom: 22px;
+  margin-top: 18px;
+  box-shadow: 0 1px 4px rgba(44, 62, 80, 0.04);
+  display: flex;
+  flex-direction: column;
+}
+
+.couponCard {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: linear-gradient(90deg, #ffecd2 0%, #fcb69f 100%);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(252, 182, 159, 0.15);
+  padding: 12px 24px;
+  margin: 14px 0 0 0;
+  border: 2px dashed #ff9800;
+  position: relative;
+}
+
+.couponCode {
+  font-family: 'Caveat', cursive, sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #ff5722;
+  letter-spacing: 2px;
+  text-shadow: 0 2px 8px #fff3e0;
+  margin-right: 16px;
+}
+
+.couponBtn {
+  background: linear-gradient(90deg, #43e97b 0%, #38f9d7 100%);
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(67, 233, 123, 0.15);
+  transition: background 0.2s, transform 0.1s;
+}
+.couponBtn:active {
+  transform: scale(0.96);
+}
+
+.staffRowContainer {
+  background: #f7f7fa;
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(44, 62, 80, 0.04);
+  border: 1px solid #e0e0e0;
+  padding: 18px 20px 10px 20px;
+  margin-bottom: 32px;
+  margin-top: 28px;
+}
+
+.staffRow {
+  display: flex;
+  flex-direction: row;
+  gap: 36px;
+  justify-content: space-between;
+  align-items: flex-end;
+}

@@ -1,19 +1,22 @@
 import mongoose from "mongoose"
 
-const superChef = async () =>{
-    try {
-        const conn = await mongoose.createConnection(process.env.MONGO_SUPERCHEF_URI);
-        return conn;
-    } catch (error) {
-        console.error(error)
-        process.exit(1);
-    }
-}
-
 const connectDb = async () => {
-    const chefConn = await superChef();
-
-    return{chefConn}
+    if (mongoose.connection.readyState >= 1) return;
+    try {
+        await mongoose.connect(process.env.MONGO_SUPERCHEF_URI, {
+            serverSelectionTimeoutMS: 30000,
+            socketTimeoutMS: 60000,
+            maxPoolSize: 100,
+            retryWrites: true,
+            retryReads: true,
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log("MongoDB connected");
+    } catch (error) {
+        console.error("MongoDB connection error:", error);
+        throw error;
+    }
 }
 
 export default connectDb;
