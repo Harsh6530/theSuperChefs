@@ -104,7 +104,7 @@ export default function Services() {
               <li>Expert Mixology</li>
               <li>Excellent Communication</li>
               <li>Fast & Efficient</li>
-              <li>Responsible & Trustworthy</li>
+              <li>Bartender kit carried along</li>
             </ul>
             <div>Book a Bartender & Experience Mixology Perfection</div>
             <div className={styles.price}>

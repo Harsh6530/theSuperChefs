@@ -1,50 +1,81 @@
 "use server";
 
 import { NextResponse } from "next/server";
-import CryptoJS from 'crypto-js';
-import axios from "axios";
+import { StandardCheckoutClient, Env, StandardCheckoutPayRequest } from 'pg-sdk-node';
+import { randomUUID } from 'crypto';
 
 export async function POST(req) {
   try {
     const data = await req.json();
-    const apidata = {
-      merchantId: process.env.NEXT_API_MERCHANT_ID,
-      merchantTransactionId: data.merchantTransactionId,
-      merchantUserId: data.merchantUserId,
-      amount: data.amount,
-      redirectUrl: `http://localhost:3000/api/paystatus`,
-      redirectMode: "POST",
-      callbackUrl: "http://localhost:3000/api/paystatus",
-      mobileNumber: data.mobileNumber,
-      paymentInstrument: {
-        type: "PAY_PAGE",
-      },
-    };
-    const data2 = JSON.stringify(apidata);
-    const base64data = Buffer.from(data2).toString("base64");
+    
+    // Debug logging
+    console.log("Environment:", process.env.NODE_ENV);
+    console.log("Merchant ID:", process.env.NEXT_API_MERCHANT_ID);
+    console.log("Merchant Key:", process.env.NEXT_API_MERCHANT_KEY ? "Present" : "Missing");
+    
+    // Validate required fields
+    if (!data.amount || !data.merchantTransactionId) {
+      return NextResponse.json(
+        { message: "Missing required fields", error: "Amount and merchantTransactionId are required" },
+        { status: 400 }
+      );
+    }
 
-    const hash = CryptoJS
-      .SHA256(base64data + "/pg/v1/pay" + process.env.NEXT_API_MERCHANT_KEY)
-      .toString(CryptoJS.enc.Hex);
-    const verify = hash + "###" + process.env.NEXT_API_MERCHANT_VERSION;
+    // Validate environment variables
+    if (!process.env.NEXT_API_MERCHANT_ID || !process.env.NEXT_API_MERCHANT_KEY) {
+      return NextResponse.json(
+        { message: "Configuration Error", error: "Missing PhonePe credentials" },
+        { status: 500 }
+      );
+    }
 
-    const response = await axios.post(
-      "https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/pay",
-      { request: base64data },
-      {
-        headers: {
-          accept: "application/json",
-          "Content-Type": "application/json",
-          "X-VERIFY": verify,
-        },
-      }
+    // Initialize PhonePe client with production environment
+    const client = StandardCheckoutClient.getInstance(
+      process.env.NEXT_API_MERCHANT_ID,
+      process.env.NEXT_API_MERCHANT_KEY,
+      parseInt(process.env.NEXT_API_MERCHANT_VERSION || "1"),
+      Env.PRODUCTION  // Always use production environment
     );
 
-    return NextResponse.json({ message: "Success", data: response.data.data });
+    // Get the base URL from environment or default to production URL
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://thesuperchefs.com';
+
+    // Create payment request using the builder pattern
+    const request = StandardCheckoutPayRequest.builder()
+      .merchantOrderId(data.merchantTransactionId)
+      .amount(data.amount)
+      .redirectUrl(`${baseUrl}/api/paystatus`)  // Use production URL
+      .build();
+
+    // Debug logging
+    console.log("Payment Request:", {
+      merchantOrderId: data.merchantTransactionId,
+      amount: data.amount,
+      redirectUrl: `${baseUrl}/api/paystatus`
+    });
+
+    // Initiate payment
+    const response = await client.pay(request);
+    
+    if (!response || !response.redirectUrl) {
+      throw new Error("Invalid response from PhonePe");
+    }
+
+    // Return the checkout page URL to redirect the user
+    return NextResponse.json({ 
+      message: "Success", 
+      data: {
+        redirectUrl: response.redirectUrl
+      }
+    });
   } catch (error) {
-    console.error("Error in POST handler:", error);
+    console.error("Error in payment initiation:", error);
     return NextResponse.json(
-      { message: "Error", error: error.message },
+      { 
+        message: "Error", 
+        error: error.message || "Failed to initiate payment",
+        details: error.response?.data || error.stack
+      },
       { status: 500 }
     );
   }

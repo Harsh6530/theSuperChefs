@@ -9,28 +9,15 @@ Mail IDs google workspace
 AWS free credits
 tracking of website, booking page, payNow reached not payed
 
-
-waiter 1500, bartender 2500, 20-25 people, bartender kit at the container itself
 additional remarks in all three
 24 hr buffer, serving time instead of party time, give the desc food ready( night time -> 12hrs )(7-7 dead)(7 dinner)
-2 extra people removal
-starters 299
-maincourse 299
-sides 149
-desserts 299
-bevreages 149
-
 waiter and bartender
 
 data city time people
 menu, wiater bartender full address remarks
 checkout
 
-price change
-menu finalization (ss)
 waiter and bar additional service , remarks if any-> full address before ckeckout
-adult 100 child 75
-base price 999 chefs
 discount cuopon welcome 15% during checkout
 Hassle-free cooking & raw material/ ingredients count conveyed
 token refundabale / deductable form final price
@@ -39,7 +26,6 @@ Our team will contact you within 60 mins of payment conf. for menu conf. and che
 Remaining amount will be collected after the service->remove this
 
 footer policies update and social links (ss)
-about us page
 google IDs
 
 

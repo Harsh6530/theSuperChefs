@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-import sha256 from "crypto-js/sha256";
-import axios from "axios";
+import { StandardCheckoutClient, Env } from 'pg-sdk-node';
 
 export async function POST(req) {
   try {
@@ -11,34 +10,37 @@ export async function POST(req) {
     const amount = data.get("amount");
     const providerReferenceId = data.get("providerReferenceId");
 
-    const st = `/pg/v1/status/${merchantId}/${transactionId}${process.env.NEXT_API_MERCHANT_KEY}`;
-    const dataSha256 = sha256(st).toString();
-    const checksum = `${dataSha256}###${process.env.NEXT_API_MERCHANT_VERSION}`;
+    // Initialize PhonePe client
+    const client = StandardCheckoutClient.getInstance(
+      process.env.NEXT_API_MERCHANT_ID,
+      process.env.NEXT_API_MERCHANT_KEY,
+      parseInt(process.env.NEXT_API_MERCHANT_VERSION || "1"),
+      Env.PRODUCTION
+    );
 
-    const options = {
-      method: "GET",
-      url: `https://api-preprod.phonepe.com/apis/pg-sandbox/pg/v1/status/${merchantId}/${transactionId}`,
-      headers: {
-        accept: "application/json",
-        "Content-Type": "application/json",
-        "X-VERIFY": checksum,
-        "X-MERCHANT-ID": merchantId,
-      },
-    };
+    // Check payment status
+    const statusResponse = await client.checkStatus(merchantId, transactionId);
 
-    const response = await axios.request(options);
+    // Get the base URL from environment or default to production URL
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://thesuperchefs.com';
 
-    if (response.data.code === "PAYMENT_SUCCESS") {
-      return NextResponse.redirect(`http://localhost:3000/payment/success?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}`, {
-        status: 301,
-      });
+    if (statusResponse.code === "PAYMENT_SUCCESS") {
+      return NextResponse.redirect(
+        `${baseUrl}/payment/success?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}`,
+        { status: 301 }
+      );
     } else {
-      return NextResponse.redirect(`http://localhost:3000/payment/failure?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}`, {
-        status: 301,
-      });
+      return NextResponse.redirect(
+        `${baseUrl}/payment/failure?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}&error=${encodeURIComponent(statusResponse.message || 'Payment failed')}`,
+        { status: 301 }
+      );
     }
   } catch (error) {
-    console.error(error);
-    return NextResponse.redirect(`http://localhost:3000/payment/failure?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}`, { status: 301 });
+    console.error("Error checking payment status:", error);
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://thesuperchefs.com';
+    return NextResponse.redirect(
+      `${baseUrl}/payment/failure?transactionId=${transactionId}&amount=${amount}&providerReferenceId=${providerReferenceId}&error=${encodeURIComponent('Failed to verify payment status')}`,
+      { status: 301 }
+    );
   }
 }

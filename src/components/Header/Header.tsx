@@ -107,6 +107,13 @@ export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
             }`}>
             Contact us
           </a>
+          <a
+            href="/aboutus"
+            className={`${styles.navBtn} ${
+              currentPage === "aboutus" ? styles.activeNav : ""
+            }`}>
+            About Us
+          </a>
           {isLoggedIn ? (
             <button
               onClick={() => setSidebarOpen(true)}>

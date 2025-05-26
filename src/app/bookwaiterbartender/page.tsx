@@ -72,6 +72,9 @@ const Page = () => {
                   +
                 </button>
               </div>
+              <div className={styles.bartenderNote}>
+                A bartender is sufficient for 20-25 people.
+              </div>
             </div>
             <CouponSection couponApplied={couponApplied} setCouponApplied={setCouponApplied} />
           </div>
