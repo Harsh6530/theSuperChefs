@@ -31,11 +31,11 @@ const TimePopup: React.FC<TimePopupProps> = ({
 
         // Only show slots after the buffer time
         if (slotDate > now) {
-          const hourFormatted = hour % 12 === 0 ? 12 : hour % 12;
-          const amPm = hour >= 12 ? "PM" : "AM";
-          const minuteFormatted = minute === 0 ? "00" : minute;
+        const hourFormatted = hour % 12 === 0 ? 12 : hour % 12;
+        const amPm = hour >= 12 ? "PM" : "AM";
+        const minuteFormatted = minute === 0 ? "00" : minute;
 
-          slots.push(`${hourFormatted}:${minuteFormatted} ${amPm}`);
+        slots.push(`${hourFormatted}:${minuteFormatted} ${amPm}`);
         }
       }
     }

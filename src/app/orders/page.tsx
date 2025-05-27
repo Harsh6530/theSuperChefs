@@ -106,7 +106,7 @@ const OrdersPage = () => {
                 </p>
                 <button
                   className={styles.bookNowButton}
-                  onClick={() => router.push("/book")}>
+                  onClick={() => router.push('/#services')}>
                   Book Now
                 </button>
               </div>

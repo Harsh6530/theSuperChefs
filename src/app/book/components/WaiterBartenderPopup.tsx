@@ -20,12 +20,12 @@ const WaiterBartenderPopup: React.FC<WaiterBartenderPopupProps> = ({
   setWaiterCount,
   bartenderCount,
   setBartenderCount,
-  WAITER_PRICE = 1500,
-  BARTENDER_PRICE = 2000,
+  WAITER_PRICE = 1499,
+  BARTENDER_PRICE = 2499,
 }) => {
   const handleIncrement = (type: "waiter" | "bartender") => {
     if (type === "waiter") setWaiterCount(waiterCount + 1);
-    if (type === "bartender" && bartenderCount < 2) setBartenderCount(bartenderCount + 1);
+    if (type === "bartender") setBartenderCount(bartenderCount + 1);
   };
 
   const handleDecrement = (type: "waiter" | "bartender") => {
@@ -47,7 +47,7 @@ const WaiterBartenderPopup: React.FC<WaiterBartenderPopupProps> = ({
       </div>
       <div className={styles.popupContent}>
         <div className={styles.selectionItem}>
-          <div className={styles.selectionLabel}>Waiters <span style={{color:'#ff9800', fontWeight:500, fontSize:14}}>(₹1500)</span></div>
+          <div className={styles.selectionLabel}>Waiters <span style={{color:'#ff9800', fontWeight:500, fontSize:14}}>(₹1499)</span></div>
           <div className={styles.counter}>
             <button
               className={styles.counterButton}
@@ -66,7 +66,10 @@ const WaiterBartenderPopup: React.FC<WaiterBartenderPopupProps> = ({
           </div>
         </div>
         <div className={styles.selectionItem}>
-          <div className={styles.selectionLabel}>Bartenders <span style={{color:'#ff9800', fontWeight:500, fontSize:14}}>(₹2000, max 2)</span></div>
+          <div className={styles.selectionLabel}>
+            Bartenders <span style={{color:'#ff9800', fontWeight:500, fontSize:14}}>(₹2499)</span>
+            <div style={{fontSize:12, color:'#666', marginTop:4}}>One bartender can handle 20-25 persons easily</div>
+          </div>
           <div className={styles.counter}>
             <button
               className={styles.counterButton}
@@ -79,7 +82,6 @@ const WaiterBartenderPopup: React.FC<WaiterBartenderPopupProps> = ({
             <button
               className={styles.counterButton}
               onClick={() => handleIncrement("bartender")}
-              disabled={bartenderCount === 2}
             >
               <Plus size={16} />
             </button>

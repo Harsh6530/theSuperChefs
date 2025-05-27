@@ -13,7 +13,7 @@ export default function Footer() {
   const [showFAQs, setShowFAQs] = React.useState(false);
 
   return (
-    <footer className={styles.footer}>
+    <footer id="footer" className={styles.footer}>
       <div className={styles.footerContent}>
         {/* About */}
         <div className={styles.footerCol}>
