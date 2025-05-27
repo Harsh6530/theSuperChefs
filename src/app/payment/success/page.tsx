@@ -25,7 +25,7 @@ const SuccessPage = () => {
     referenceId: "",
   });
 
-  const createOrder = async (orderData) => {
+  const createOrder = async (orderData: any) => {
     console.log(orderData);
 
     const response = await fetch("/api/order", {
@@ -78,15 +78,23 @@ const SuccessPage = () => {
 
     const orderData = {
       user: user.name,
+      mobile: user.mobile,
       date: order_data.date,
       time: order_data.time,
       members: {
-        adults: order_data.guestsData.adults,
-        children: order_data.guestsData.children,
+        adults: order_data.guestsData?.adults ?? order_data.guests?.adults ?? 0,
+        children: order_data.guestsData?.children ?? order_data.guests?.children ?? 0,
       },
-      items: order_data.items_data,
-      mobile: user.mobile,
-      total: order_data.amount,
+      items: order_data.items_data || order_data.selectedItems || [],
+      city: order_data.city || "",
+      address: order_data.address || "",
+      remarks: order_data.remarks || "",
+      coupon: order_data.coupon || "",
+      waiterCount: order_data.waiterCount || 0,
+      bartenderCount: order_data.bartenderCount || 0,
+      selectedDate: order_data.selectedDate || "",
+      selectedTime: order_data.selectedTime || "",
+      total: order_data.totalAmount || order_data.amount || 0,
       txn_id: txnId,
       ref_id: providerId,
     };
@@ -206,8 +214,8 @@ const SuccessPage = () => {
             <div className={styles.bookingInfo}>
               <h3>What&apos;s Next?</h3>
               <ul>
-                <li>Our chef will contact you 24 hours before the event</li>
-                <li>Remaining amount will be collected after the service</li>
+                <li>Our team will contact you within 60 minutes, for menu confirmation and chef allocation</li>
+                {/* <li>Remaining amount will be collected after the service</li> */}
               </ul>
             </div>
 

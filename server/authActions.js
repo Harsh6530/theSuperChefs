@@ -1,17 +1,21 @@
 import connectDb from "../middleware/connectDb";
 import userSchema from "../models/userSchema";
+import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+function getUserModel() {
+  return mongoose.models.User || mongoose.model("User", userSchema);
+}
+
 export async function login(data) {
   try {
-    const { chefConn } = await connectDb();
+    await connectDb();
 
     const { email, password } = data;
 
-    const user = chefConn.model("users", userSchema);
-
-    const response = await user.findOne({ email: email });
+    const User = getUserModel();
+    const response = await User.findOne({ email: email });
 
     if (!response) {
       return {
@@ -62,13 +66,12 @@ export async function login(data) {
 
 export async function signup(data) {
   try {
-    const { chefConn } = await connectDb();
+    await connectDb();
 
     const { email, password, name, mobile } = data;
 
-    const user = chefConn.model("users", userSchema);
-
-    const response = await user.findOne({ email: email });
+    const User = getUserModel();
+    const response = await User.findOne({ email: email });
 
     if (response) {
       return {
@@ -81,7 +84,7 @@ export async function signup(data) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    const newUser = new user({
+    const newUser = new User({
       name,
       email,
       password: hashedPassword,
@@ -107,13 +110,12 @@ export async function signup(data) {
 
 export async function forgotPassword(data) {
   try {
-    const { chefConn } = connectDb();
+    await connectDb();
 
     const { email, password, mobile } = data;
 
-    const user = chefConn.model("users", userSchema);
-
-    const response = user.findOne({ email, mobile });
+    const User = getUserModel();
+    const response = await User.findOne({ email, mobile });
 
     if (!response) {
       return {
@@ -126,9 +128,8 @@ export async function forgotPassword(data) {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
-    user.password = hashedPassword;
-
-    await user.save();
+    response.password = hashedPassword;
+    await response.save();
 
     return {
       success: true,

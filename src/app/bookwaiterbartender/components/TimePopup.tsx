@@ -48,7 +48,7 @@ const TimePopup: React.FC<TimePopupProps> = ({
   return (
     <div className={styles.popup}>
       <div className={styles.popupHeader}>
-        <h2>Select Party Time</h2>
+        <h2>Select Serving Time</h2>
         <button
           className={styles.closeButton}
           onClick={() => setPopup("")}>

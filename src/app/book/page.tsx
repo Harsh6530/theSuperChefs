@@ -6,12 +6,21 @@ import MembersPopup from "./components/MembersPopup";
 import ItemsPopup from "./components/ItemsPopup";
 import DetailsPopup from "./components/DetailsPopup";
 import TimePopup from "./components/TimePopup";
+import CityPopup from "./components/CityPopup";
 import { ArrowLeft, ChevronDown, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { checkAuth } from "../../../redux/auth/authSlice";
 import { dataContext } from "../context/dataContext";
 import { useContext } from "react";
+import WaiterBartenderPopup from "./components/WaiterBartenderPopup";
+import CouponPopup from "./components/CouponPopup";
+import AddressPopup from "./components/AddressPopup";
+import {
+  setGuests, setSelectedItems, setCity, setAddress, setRemarks, setCoupon,
+  setWaiterCount, setBartenderCount, setSelectedDate, setSelectedTime
+} from "../../../redux/booking/bookingSlice";
+import React from "react";
 
 const Page = () => {
   const router = useRouter();
@@ -29,6 +38,7 @@ const Page = () => {
         phone: string;
       };
     };
+    booking: any;
   }
 
   useEffect(() => {
@@ -118,10 +128,6 @@ const Page = () => {
   // Calculate guests total
   const guestsTotal = guests.adults * ADULT_PRICE + guests.children * CHILD_PRICE;
 
-  // Calculate final total (excluding booking fee)
-  const somethingSelected = totalGuests > 0 || uniqueSelectedItems.length > 0;
-  const totalAmount = somethingSelected ? BASE_PRICE + guestsTotal + itemsTotal : 0;
-
   const user = useSelector((state: RootState) => state.auth.user);
 
   const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
@@ -140,22 +146,60 @@ const Page = () => {
     setDateTime({ ...dateTime, date: dates[index] });
   };
 
+  const CITIES = ["Delhi", "Mumbai", "Bangalore", "Chennai", "Kolkata"];
+  const WAITER_PRICE = 1500;
+  const BARTENDER_PRICE = 2000;
+
+  const [city, setCity] = useState("");
+  const [waiterCount, setWaiterCount] = useState(0);
+  const [bartenderCount, setBartenderCount] = useState(0);
+  const [coupon, setCoupon] = useState("");
+
+  // Add waiter and bartender total
+  const waiterTotal = waiterCount * WAITER_PRICE;
+  const bartenderTotal = bartenderCount * BARTENDER_PRICE;
+  // Calculate final total (excluding booking fee)
+  const somethingSelected = totalGuests > 0 || uniqueSelectedItems.length > 0;
+  const totalAmount = somethingSelected ? BASE_PRICE + guestsTotal + itemsTotal + waiterTotal + bartenderTotal : 0;
+
+  // Calculate discount if coupon is applied
+  const COUPON_CODE = "WELCOME15";
+  const COUPON_DISCOUNT = 0.15;
+  const isCouponApplied = coupon === COUPON_CODE;
+  const discountAmount = isCouponApplied ? Math.round(totalAmount * COUPON_DISCOUNT) : 0;
+  const discountedTotal = isCouponApplied ? totalAmount - discountAmount : totalAmount;
+
+  const [address, setAddress] = useState("");
+  const [remarks, setRemarks] = useState("");
+  const [showDetails, setShowDetails] = useState(false);
+
   const validator = () => {
     if (
       selectedDate === null ||
       selectedTime === "" ||
       totalGuests === 0 ||
-      selectedItems.length === 0
+      selectedItems.length === 0 ||
+      !city
     ) {
       alert("Please fill all the details");
       return;
     }
-    setPopup("details");
+    setPopup("address");
   };
 
   useEffect(() => {
     setDateTime({ ...dateTime, date: dates[0] });
   }, []);
+
+  const booking = useSelector((state: RootState) => state.booking);
+
+  // Sync local address/remarks with Redux after AddressPopup
+  React.useEffect(() => {
+    if (showDetails) {
+      setAddress(booking.address || "");
+      setRemarks(booking.remarks || "");
+    }
+  }, [showDetails, booking.address, booking.remarks]);
 
   return (
     <div className={styles.container}>
@@ -193,7 +237,7 @@ const Page = () => {
 
             <div className={styles.selectionContainer}>
               <div className={styles.selection}>
-                <label>Party Time</label>
+                <label>Serving Time</label>
                 <button
                   className={styles.selector}
                   onClick={() => setPopup("time")}>
@@ -229,22 +273,120 @@ const Page = () => {
                   <ChevronDown size={20} />
                 </button>
               </div>
+
+              <div className={styles.selection}>
+                <label>City</label>
+                <button
+                  className={styles.selector}
+                  type="button"
+                  onClick={() => setPopup("city")}
+                  style={{ justifyContent: "space-between" }}
+                >
+                  <span>{city ? city : "Select City"}</span>
+                  <ChevronDown size={20} />
+                </button>
+              </div>
+
+              <div className={styles.selection}>
+                <label>Waiters & Bartenders</label>
+                <button
+                  className={styles.selector}
+                  type="button"
+                  onClick={() => setPopup("waiterbartender")}
+                  style={{ justifyContent: "space-between" }}
+                >
+                  <span>
+                    {waiterCount > 0 || bartenderCount > 0
+                      ? `${waiterCount} Waiter${waiterCount !== 1 ? "s" : ""}, ${bartenderCount} Bartender${bartenderCount !== 1 ? "s" : ""}`
+                      : "Select Waiters & Bartenders"}
+                  </span>
+                  <ChevronDown size={20} />
+                </button>
+              </div>
+
+              <div className={styles.selection}>
+                <label>Coupon</label>
+                {coupon ? (
+                  <div style={{
+                    background: "linear-gradient(90deg, #ff9800 0%, #ff4d4f 100%)",
+                    color: "#fff",
+                    borderRadius: "8px",
+                    padding: "10px 18px",
+                    fontWeight: 700,
+                    fontSize: "1.1rem",
+                    letterSpacing: 2,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom: 8,
+                    width: "100%",
+                    boxSizing: "border-box",
+                    minHeight: 44,
+                    gap: 8
+                  }}>
+                    <span style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{coupon}</span>
+                    <button
+                      style={{
+                        background: "#fff",
+                        color: "#ff4d4f",
+                        border: "none",
+                        borderRadius: 6,
+                        fontWeight: 700,
+                        fontSize: 12,
+                        padding: "2px 12px",
+                        cursor: "pointer",
+                        marginLeft: 12
+                      }}
+                      onClick={() => setCoupon("")}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ) : null}
+                <button
+                  className={styles.selector}
+                  type="button"
+                  onClick={() => setPopup("coupon")}
+                  style={{ justifyContent: "space-between", marginTop: coupon ? 8 : 0 }}
+                >
+                  <span>{coupon ? "Change Coupon" : "Apply Coupon"}</span>
+                  <ChevronDown size={20} />
+                </button>
+              </div>
             </div>
           </div>
 
           <footer className={styles.footer}>
             <div className={styles.info}>
-              {somethingSelected && <>
-                <p className={styles.amount}>₹ {totalAmount}</p>
-                <p className={styles.payableText}>Payable Amount </p>
-              </>}
+              {somethingSelected && (
+                <>
+                  {isCouponApplied ? (
+                    <>
+                      <p className={styles.amount}>
+                        <span style={{ textDecoration: "line-through", color: "#888", fontWeight: 400, fontSize: "1.1rem", marginRight: 8 }}>
+                          ₹ {totalAmount}
+                        </span>
+                        <span style={{ color: "#ff4d4f", fontWeight: 700, fontSize: "1.3rem" }}>₹ {discountedTotal}</span>
+                      </p>
+                      <p className={styles.payableText}>
+                        You save <span style={{ color: "#ff9800", fontWeight: 700 }}>₹ {discountAmount}</span> with coupon!
+                      </p>
+                    </>
+                  ) : (
+                    <>
+                      <p className={styles.amount}>₹ {totalAmount}</p>
+                      <p className={styles.payableText}>Payable Amount </p>
+                    </>
+                  )}
+                </>
+              )}
             </div>
             <button
               className={styles.continueButton}
               onClick={() => validator()}
               disabled={!somethingSelected}
             >
-              Book
+              Proceed
             </button>
           </footer>
 
@@ -272,16 +414,60 @@ const Page = () => {
             />
           )}
 
-          {popup === "details" && (
-            <DetailsPopup
+          {popup === "address" && (
+            <AddressPopup
               setPopup={setPopup}
+              setShowDetails={setShowDetails}
+            />
+          )}
+
+          {showDetails && (
+            <DetailsPopup
+              setPopup={() => setShowDetails(false)}
               guests={guests}
               selectedItems={uniqueSelectedItems}
-              totalAmount={totalAmount}
+              totalAmount={discountedTotal}
               courseCounts={courseCounts}
               guestsTotal={guestsTotal}
               itemsTotal={itemsTotal}
               BASE_PRICE={BASE_PRICE}
+              city={city}
+              waiterCount={waiterCount}
+              bartenderCount={bartenderCount}
+              waiterTotal={waiterTotal}
+              bartenderTotal={bartenderTotal}
+              coupon={coupon}
+              address={address}
+              remarks={remarks}
+            />
+          )}
+
+          {popup === "city" && (
+            <CityPopup
+              setPopup={setPopup}
+              selectedCity={city}
+              setSelectedCity={setCity}
+              cities={CITIES}
+            />
+          )}
+
+          {popup === "waiterbartender" && (
+            <WaiterBartenderPopup
+              setPopup={setPopup}
+              waiterCount={waiterCount}
+              setWaiterCount={setWaiterCount}
+              bartenderCount={bartenderCount}
+              setBartenderCount={setBartenderCount}
+              WAITER_PRICE={WAITER_PRICE}
+              BARTENDER_PRICE={BARTENDER_PRICE}
+            />
+          )}
+
+          {popup === "coupon" && (
+            <CouponPopup
+              setPopup={setPopup}
+              coupon={coupon}
+              setCoupon={setCoupon}
             />
           )}
         </div>

@@ -10,6 +10,9 @@ const waiterBartenderOrderSchema = new mongoose.Schema({
   totalAmount: { type: Number, required: true },
   bookingFee: { type: Number, default: 199 },
   paymentStatus: { type: String, default: "pending" },
+  city: { type: String, required: true },
+  address: { type: String, required: true },
+  remarks: { type: String },
   createdAt: { type: Date, default: Date.now },
 });
 

@@ -5,7 +5,22 @@
   border-top: 1px solid #fff2;
   font-size: 0.8rem;
   font-family: 'Poppins', 'Montserrat', 'Inter', Arial, sans-serif;
+  width: 100%;
+  position: relative;
+  bottom: 0;
 }
+
+/* Make the footer stick to the bottom if the page is short */
+:global(body) {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+:global(main) {
+  flex: 1;
+}
+
 .footerContent {
   max-width: 1200px;
   margin: 0 auto;
@@ -62,8 +77,118 @@
   margin-top: 2.5rem;
   padding: 0.7em 0 0.5em 0;
   border-top: 1px solid #fff2;
+  margin-bottom: -35px;
 }
 
 .footerContactItem {
   margin-bottom: 0.8em;
+}
+
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.45);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalContent {
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 6px 24px rgba(0,0,0,0.12);
+  max-width: 600px;
+  width: 92vw;
+  padding: 28px 18px 18px 18px;
+  position: relative;
+  animation: fadeIn 0.2s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(40px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.modalClose {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #888;
+  cursor: pointer;
+  z-index: 10;
+  transition: color 0.2s;
+  font-weight: 400;
+}
+.modalClose:hover {
+  color: #232323;
+}
+
+.modalTitle {
+  font-size: 1.35rem;
+  font-weight: 500;
+  color: #232323;
+  margin-bottom: 12px;
+  text-align: left;
+  letter-spacing: 0.01em;
+}
+
+.modalBody {
+  font-size: 0.97rem;
+  color: #232323;
+  line-height: 1.6;
+  font-weight: 400;
+  padding-right: 2px;
+}
+
+.modalBody h2 {
+  color: #232323;
+  font-size: 1.08rem;
+  font-weight: 500;
+  margin-top: 1.1em;
+  margin-bottom: 0.5em;
+}
+
+.modalBody h3 {
+  color: #444;
+  font-size: 1.01rem;
+  font-weight: 500;
+  margin-top: 1.1em;
+  margin-bottom: 0.4em;
+}
+
+.modalBody h4 {
+  color: #666;
+  font-size: 0.97rem;
+  font-weight: 400;
+  margin-top: 0.7em;
+  margin-bottom: 0.2em;
+}
+
+.modalBody ul {
+  margin-left: 1.1em;
+  margin-bottom: 0.7em;
+}
+.modalBody li {
+  margin-bottom: 0.18em;
+  font-size: 0.97em;
+  color: #232323;
+  font-weight: 400;
+}
+
+.faqQuestion {
+  color: #232323;
+  font-size: 1.01rem;
+  margin: 1.1rem 0 0.3rem;
+  font-weight: 500;
+}
+
+.faqQuestion:first-child {
+  margin-top: 0;
 } 

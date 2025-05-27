@@ -12,7 +12,7 @@ interface TimeSelectorProps {
 const TimeSelector: React.FC<TimeSelectorProps> = ({ selectedTime, setSelectedTime, onClick }) => {
   return (
     <div className={styles.selection}>
-      <label>Party Time</label>
+      <label>Serving Time</label>
       <button
         className={styles.selector}
         onClick={onClick}

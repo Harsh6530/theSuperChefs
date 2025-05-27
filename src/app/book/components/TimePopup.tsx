@@ -20,15 +20,23 @@ const TimePopup: React.FC<TimePopupProps> = ({
   const { dateTime, setDateTime } = useContext(dataContext);
   const generateTimeSlots = () => {
     const slots = [];
-    for (let hour = 14; hour <= 22; hour++) {
+    const now = new Date();
+    const bufferDate = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24hr buffer
+    for (let hour = 10; hour <= 22; hour++) {
       for (let minute = 0; minute < 60; minute += 30) {
         if (hour === 22 && minute === 30) continue;
 
-        const hourFormatted = hour % 12 === 0 ? 12 : hour % 12;
-        const amPm = hour >= 12 ? "PM" : "AM";
-        const minuteFormatted = minute === 0 ? "00" : minute;
+        const slotDate = new Date(bufferDate);
+        slotDate.setHours(hour, minute, 0, 0);
 
-        slots.push(`${hourFormatted}:${minuteFormatted} ${amPm}`);
+        // Only show slots after the buffer time
+        if (slotDate > now) {
+          const hourFormatted = hour % 12 === 0 ? 12 : hour % 12;
+          const amPm = hour >= 12 ? "PM" : "AM";
+          const minuteFormatted = minute === 0 ? "00" : minute;
+
+          slots.push(`${hourFormatted}:${minuteFormatted} ${amPm}`);
+        }
       }
     }
     return slots;
@@ -48,7 +56,7 @@ const TimePopup: React.FC<TimePopupProps> = ({
   return (
     <div className={styles.popup}>
       <div className={styles.popupHeader}>
-        <h2>Select Party Time</h2>
+        <h2>Select Serving Time</h2>
         <button
           className={styles.closeButton}
           onClick={() => setPopup("")}>

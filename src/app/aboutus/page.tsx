@@ -46,7 +46,7 @@ export default function AboutUsPage() {
                 <h3>{f.name}</h3>
                 <p className={styles.college}>{f.college}</p>
                 <a href={f.linkedin} target="_blank" rel="noopener noreferrer" className={styles.linkedinLink}>
-                  <Image src="/linkedin.svg" alt="LinkedIn" width={22} height={22} />
+                  <Image src="/link.png" alt="LinkedIn" width={22} height={22} />
                 </a>
                 <p className={styles.founderDesc}>{f.desc}</p>
               </div>

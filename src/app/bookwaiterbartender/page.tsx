@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "./styles/bookwaiterandbartender.module.css";
 import DateSelector from "./components/DateSelector";
 import TimeSelector from "./components/TimeSelector";
@@ -8,14 +8,37 @@ import CouponSection from "./components/CouponSection";
 import SummaryFooter from "./components/SummaryFooter";
 import DetailsPopup from "./components/DetailsPopup";
 import TimePopup from "./components/TimePopup";
+import { useDispatch, useSelector } from "react-redux";
+import { setDate, setTime, setNumWaiters, setNumBartenders, setCoupon, setCouponApplied, setCity, setAddress, setRemarks, setTotalAmount, setBookingFee, resetBooking } from "../../../redux/booking/waiterBartenderBookingSlice";
+import CityPopup from "./components/CityPopup";
+import CouponPopup from "./components/CouponPopup";
+import WaiterBartenderPopup from "./components/WaiterBartenderPopup";
+import AddressPopup from "./components/AddressPopup";
+import ReduxProvider from "../../../redux/ReduxProvider";
 
-const Page = () => {
-  const [selectedDate, setSelectedDate] = useState(0);
-  const [selectedTime, setSelectedTime] = useState("");
-  const [numWaiters, setNumWaiters] = useState(0);
-  const [numBartenders, setNumBartenders] = useState(0);
-  const [couponApplied, setCouponApplied] = useState(false);
+const PageContent = () => {
+  const dispatch = useDispatch();
+  const booking = useSelector((state: any) => state.waiterBartenderBooking);
   const [popup, setPopup] = useState("");
+  const [showDetails, setShowDetails] = useState(false);
+
+  // Handlers for popups
+  const handleProceed = () => {
+    setPopup("address");
+  };
+
+  // Calculate total
+  const WAITER_PRICE = 1500;
+  const BARTENDER_PRICE = 2500;
+  const BASE_PRICE = 999;
+  let total = BASE_PRICE + booking.numWaiters * WAITER_PRICE + booking.numBartenders * BARTENDER_PRICE;
+  let discount = booking.couponApplied ? Math.round(total * 0.15) : 0;
+  const finalTotal = total - discount;
+
+  // Update total in Redux
+  useEffect(() => {
+    dispatch(setTotalAmount(finalTotal));
+  }, [booking.numWaiters, booking.numBartenders, booking.couponApplied]);
 
   return (
     <div className={styles.container} style={{ margin: '32px 0' }}>
@@ -25,86 +48,29 @@ const Page = () => {
             <p>Booking Details</p>
           </header>
           <div className={styles.content}>
-            <DateSelector selectedDate={selectedDate} setSelectedDate={setSelectedDate} />
-            <TimeSelector
-              selectedTime={selectedTime}
-              setSelectedTime={setSelectedTime}
-              onClick={() => setPopup("time")}
-            />
-            <div className={styles.selectionBox}>
-              <label>Number of Waiters</label>
-              <div className={styles.stepper}>
-                <button
-                  type="button"
-                  className={styles.stepperBtn}
-                  onClick={() => setNumWaiters(Math.max(0, numWaiters - 1))}
-                  disabled={numWaiters <= 0}
-                >
-                  -
-                </button>
-                <span className={styles.stepperValue}>{numWaiters}</span>
-                <button
-                  type="button"
-                  className={styles.stepperBtn}
-                  onClick={() => setNumWaiters(Math.min(99, numWaiters + 1))}
-                >
-                  +
-                </button>
-              </div>
-            </div>
-            <div className={styles.selectionBox}>
-              <label>Number of Bartenders</label>
-              <div className={styles.stepper}>
-                <button
-                  type="button"
-                  className={styles.stepperBtn}
-                  onClick={() => setNumBartenders(Math.max(0, numBartenders - 1))}
-                  disabled={numBartenders <= 0}
-                >
-                  -
-                </button>
-                <span className={styles.stepperValue}>{numBartenders}</span>
-                <button
-                  type="button"
-                  className={styles.stepperBtn}
-                  onClick={() => setNumBartenders(Math.min(2, numBartenders + 1))}
-                >
-                  +
-                </button>
-              </div>
-              <div className={styles.bartenderNote}>
-                A bartender is sufficient for 20-25 people.
-              </div>
-            </div>
-            <CouponSection couponApplied={couponApplied} setCouponApplied={setCouponApplied} />
+            <DateSelector selectedDate={booking.date} setSelectedDate={d => dispatch(setDate(d))} />
+            <TimeSelector selectedTime={booking.time} setSelectedTime={t => dispatch(setTime(t))} onClick={() => setPopup("time")} />
+            <button onClick={() => setPopup("city")} className={styles.selector}>{booking.city ? booking.city : "Select City"}</button>
+            <button onClick={() => setPopup("waiterbartender")} className={styles.selector}>{`${booking.numWaiters} Waiters, ${booking.numBartenders} Bartenders`}</button>
+            <button onClick={() => setPopup("coupon")} className={styles.selector}>{booking.coupon ? booking.coupon : "Apply Coupon"}</button>
           </div>
-          <SummaryFooter
-            numWaiters={numWaiters}
-            numBartenders={numBartenders}
-            couponApplied={couponApplied}
-            onBook={() => setPopup("details")}
-          />
-          {popup === "details" && (
-            <DetailsPopup
-              setPopup={setPopup}
-              numWaiters={numWaiters}
-              numBartenders={numBartenders}
-              couponApplied={couponApplied}
-              selectedDate={selectedDate}
-              selectedTime={selectedTime}
-            />
-          )}
-          {popup === "time" && (
-            <TimePopup
-              setPopup={setPopup}
-              selectedTime={selectedTime}
-              setSelectedTime={setSelectedTime}
-            />
-          )}
+          <SummaryFooter numWaiters={booking.numWaiters} numBartenders={booking.numBartenders} couponApplied={booking.couponApplied} onBook={handleProceed} />
+          {popup === "city" && <CityPopup setPopup={setPopup} selectedCity={booking.city} setSelectedCity={c => {dispatch(setCity(c)); setPopup("");}} />}
+          {popup === "waiterbartender" && <WaiterBartenderPopup setPopup={setPopup} numWaiters={booking.numWaiters} setNumWaiters={n => dispatch(setNumWaiters(n))} numBartenders={booking.numBartenders} setNumBartenders={n => dispatch(setNumBartenders(n))} />}
+          {popup === "coupon" && <CouponPopup setPopup={setPopup} coupon={booking.coupon} setCoupon={c => dispatch(setCoupon(c))} couponApplied={booking.couponApplied} setCouponApplied={v => dispatch(setCouponApplied(v))} />}
+          {popup === "address" && <AddressPopup setPopup={setPopup} setShowDetails={setShowDetails} address={booking.address} setAddress={a => dispatch(setAddress(a))} remarks={booking.remarks} setRemarks={r => dispatch(setRemarks(r))} />}
+          {showDetails && <DetailsPopup setPopup={() => setShowDetails(false)} numWaiters={booking.numWaiters} numBartenders={booking.numBartenders} couponApplied={booking.couponApplied} selectedDate={booking.date} selectedTime={booking.time} city={booking.city} address={booking.address} remarks={booking.remarks} totalAmount={finalTotal} />}
+          {popup === "time" && <TimePopup setPopup={setPopup} selectedTime={booking.time} setSelectedTime={t => dispatch(setTime(t))} />}
         </div>
       </div>
     </div>
   );
 };
+
+const Page = () => (
+  <ReduxProvider>
+    <PageContent />
+  </ReduxProvider>
+);
 
 export default Page; 

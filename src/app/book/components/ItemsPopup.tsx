@@ -108,6 +108,9 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
     <div className={`${styles.popup} ${styles.itemsPopup}`}>
       <div className={styles.popupHeader}>
         <h2>Select Items</h2>
+        <p style={{ fontSize: 13, color: '#666', margin: '6px 0 0 2px', fontWeight: 400 }}>
+          Hassle-free cooking. Ingredient quantities and raw material details will be shared after booking.
+        </p>
         <button
           className={styles.closeButton}
           onClick={() => setPopup("")}>
@@ -195,14 +198,18 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
           </div>
         ))}
       </div>
-
       <div className={styles.popupFooter}>
         <div className={styles.selectedCount}>
-          {allCourses.map(course => (
-            <span key={course} style={{ marginRight: 10 }}>
-              {course}: {courseCounts[course] || 0}
-            </span>
-          ))}
+          <div>
+            <span>Soups: {courseCounts["Soups"] || 0}</span>
+            <span style={{ marginLeft: 16 }}>Starters: {courseCounts["Starters"] || 0}</span>
+            <span style={{ marginLeft: 16 }}>Main Course: {courseCounts["Main Course"] || 0}</span>
+          </div>
+          <div>
+            <span>Sides: {courseCounts["Sides"] || 0}</span>
+            <span style={{ marginLeft: 16 }}>Desserts: {courseCounts["Desserts"] || 0}</span>
+            <span style={{ marginLeft: 16 }}>Beverages: {courseCounts["Beverages"] || 0}</span>
+          </div>
         </div>
         <button
           className={styles.doneButton}

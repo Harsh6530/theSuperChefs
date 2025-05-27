@@ -2,31 +2,10 @@ book now button redirect pricing
 timings according to the currnet time
 todays date next slot 4-5 hours
 master page for menu
-city in the booking page
-about us page
 
 Mail IDs google workspace
 AWS free credits
-tracking of website, booking page, payNow reached not payed
-
-additional remarks in all three
-24 hr buffer, serving time instead of party time, give the desc food ready( night time -> 12hrs )(7-7 dead)(7 dinner)
-waiter and bartender
-
-data city time people
-menu, wiater bartender full address remarks
-checkout
-
-waiter and bar additional service , remarks if any-> full address before ckeckout
-discount cuopon welcome 15% during checkout
-Hassle-free cooking & raw material/ ingredients count conveyed
-token refundabale / deductable form final price
-
-Our team will contact you within 60 mins of payment conf. for menu conf. and chef alloc.
-Remaining amount will be collected after the service->remove this
-
-footer policies update and social links (ss)
+tracking of website, booking page, payNow reached not payeds
 google IDs
-
 
 

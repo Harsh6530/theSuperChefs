@@ -19,6 +19,10 @@ const orderSchema = new mongoose.Schema({
   ],
   txn_id: { type: String, default: "" },
   ref_id: { type: String, default: "" },
+  city: { type: String, required: true },
+  waiterCount: { type: Number, required: true },
+  bartenderCount: { type: Number, required: true, max: 2 },
+  coupon: { type: String, default: "" },
   createdAt: { type: Date, default: Date.now() },
 });
 
