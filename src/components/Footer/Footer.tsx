@@ -31,10 +31,10 @@ export default function Footer() {
           <h3>Useful Links</h3>
           <hr />
           <ul>
-            <li><span>&gt;</span> <button style={{background:'none',border:'none',color:'#ff8c1a',cursor:'pointer',padding:0}} onClick={()=>setShowPrivacy(true)}>Privacy Policy</button></li>
-            <li><span>&gt;</span> <button style={{background:'none',border:'none',color:'#ff8c1a',cursor:'pointer',padding:0}} onClick={()=>setShowRefund(true)}>Refund & Cancellation policy</button></li>
-            <li><span>&gt;</span> <button style={{background:'none',border:'none',color:'#ff8c1a',cursor:'pointer',padding:0}} onClick={()=>setShowTerms(true)}>Terms & Conditions</button></li>
-            <li><span>&gt;</span> <button style={{background:'none',border:'none',color:'#ff8c1a',cursor:'pointer',padding:0}} onClick={()=>setShowFAQs(true)}>FAQ's</button></li>
+            <li><span>&gt;</span> <button className={styles.footerLink} onClick={()=>setShowPrivacy(true)}>Privacy Policy</button></li>
+            <li><span>&gt;</span> <button className={styles.footerLink} onClick={()=>setShowRefund(true)}>Refund & Cancellation policy</button></li>
+            <li><span>&gt;</span> <button className={styles.footerLink} onClick={()=>setShowTerms(true)}>Terms & Conditions</button></li>
+            <li><span>&gt;</span> <button className={styles.footerLink} onClick={()=>setShowFAQs(true)}>FAQ's</button></li>
           </ul>
         </div>
         {/* Contact */}

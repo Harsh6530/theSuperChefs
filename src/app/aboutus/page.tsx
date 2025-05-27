@@ -13,7 +13,7 @@ const founders = [
     name: 'Swatantra Singh',
     college: 'IHM Bangalore',
     linkedin: 'https://www.linkedin.com/in/swatantra-singh-ab5410184/',
-    img: '/founders/founder2.jpg',
+    img: '/founders/founder2.jpeg',
     desc: 'Swatantra Singh, an IHM Bangalore alumnus with deep experience in business strategy and operations.'
   },
   {

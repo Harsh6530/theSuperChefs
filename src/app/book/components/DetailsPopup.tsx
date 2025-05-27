@@ -56,6 +56,54 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedI
   const discountAmount = isCouponApplied ? Math.round(subtotal * COUPON_DISCOUNT) : 0;
   const discountedTotal = isCouponApplied ? subtotal - discountAmount : subtotal;
 
+  const handlePayment = async () => {
+    try {
+      // Save booking data to localStorage for payment success page
+      const userString = localStorage.getItem("Credentials");
+      const user = userString ? JSON.parse(userString) : null;
+      const orderData = {
+        user: user?.name || "",
+        mobile: user?.mobile || "",
+        guests,
+        selectedItems,
+        totalAmount,
+        courseCounts,
+        guestsTotal,
+        itemsTotal,
+        BASE_PRICE,
+        city,
+        waiterCount,
+        bartenderCount,
+        waiterTotal,
+        bartenderTotal,
+        coupon,
+        address,
+        remarks,
+        bookingFee: BOOKING_FEE,
+        paymentStatus: "pending",
+      };
+      localStorage.setItem("order-data", JSON.stringify(orderData));
+      // Initiate payment (redirect to gateway)
+      const response = await fetch("/api/payrequest", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          merchantTransactionId: `MT${Date.now()}`,
+          amount: BOOKING_FEE * 100, // in paise
+        }),
+      });
+      const data = await response.json();
+      if (data.data && data.data.redirectUrl) {
+        window.location.href = data.data.redirectUrl;
+      } else {
+        throw new Error("No redirect URL received");
+      }
+    } catch (error) {
+      console.error("Error initiating payment:", error);
+      alert( (error as any).response?.data?.error || "Failed to initiate payment. Please try again.");
+    }
+  };
+
   return (
     <div className={`${styles.popup} ${styles.detailsPopup}`}>
       <div className={styles.popupHeader}>
@@ -160,7 +208,7 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedI
       </div>
 
       <div className={styles.popupFooter}>
-        <button className={styles.payButton} onClick={()=>router.push('/payment')}>Pay ₹{BOOKING_FEE} for Booking</button>
+        <button className={styles.payButton} onClick={handlePayment}>Pay ₹{BOOKING_FEE} for Booking</button>
       </div>
     </div>
   )

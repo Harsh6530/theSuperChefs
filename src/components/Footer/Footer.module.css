@@ -191,4 +191,21 @@
 
 .faqQuestion:first-child {
   margin-top: 0;
+}
+
+.footerLink {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 0;
+  font-size: inherit;
+  font-family: inherit;
+  text-align: left;
+  transition: color 0.18s;
+}
+.footerLink:hover,
+.footerLink:focus {
+  color: #fbbf24;
+  text-decoration: underline;
 } 
