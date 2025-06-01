@@ -103,7 +103,7 @@ export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
           {/* <span className="font-extrabold text-2xl sm:text-3xl text-gray-900 tracking-tight font-sans drop-shadow-md">THE SUPERCHIEFS</span> */}
         </div>
         <nav
-          className="flex gap-4 font-semibold text-base sm:text-lg mt-2 sm:mt-0"
+          className="flex gap-1 md:gap-4 font-semibold text-base sm:text-lg mt-2 sm:mt-0"
           style={{ fontSize: "1rem" }}>
           <a
             href="#services"
