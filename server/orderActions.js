@@ -1,10 +1,11 @@
+import mongoose from "mongoose";
 import orderSchema from "../models/orderSchema.js";
 import connectDb from "../middleware/connectDb.js";
 
 export const createOrder = async (data) => {
   try {
-    const { chefConn } = await connectDb();
-    const Order = chefConn.model("Order", orderSchema);
+    await connectDb();
+    const Order = mongoose.models.Order || mongoose.model("Order", orderSchema);
     const newOrder = new Order(data);
 
     await newOrder.save();
@@ -28,8 +29,8 @@ export const getOrdersbyId = async (data) => {
   try {
     console.log(data);
     const { name, mobile } = data;
-    const { chefConn } = await connectDb();
-    const Order = chefConn.model("orders", orderSchema);
+    await connectDb();
+    const Order = mongoose.models.Order || mongoose.model("Order", orderSchema);
     const orders = await Order.find({ user: name, mobile });
 
     return {

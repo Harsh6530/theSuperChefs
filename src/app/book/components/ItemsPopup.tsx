@@ -1,23 +1,25 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import styles from "../styles/popup.module.css";
 import { X, Check } from "lucide-react";
 import { useContext } from "react";
 import { dataContext } from "@/app/context/dataContext";
 
-interface Item {
-  id: number;
-  name: string;
-  price: number;
-  category: string;
+interface MenuItem {
+  _id: string;
+  Course_Type: string;
+  Classification: string;
+  Cuisine: string;
+  Dish_Name: string;
+  Remarks?: string;
 }
 
 interface ItemsPopupProps {
   setPopup: (value: string) => void;
-  selectedItems: Item[];
-  onItemsSelected: (items: Item[]) => void;
+  selectedItems: any[];
+  onItemsSelected: (items: any[]) => void;
 }
 
 const ItemsPopup: React.FC<ItemsPopupProps> = ({
@@ -26,53 +28,40 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
   onItemsSelected,
 }) => {
   const { itemsData, setItemsData } = useContext(dataContext);
-  const menuItems: Item[] = [
-    // Starters
-    { id: 1, name: "Paneer Tikka", price: 299, category: "Starters" },
-    { id: 2, name: "Veg Spring Rolls", price: 249, category: "Starters" },
-    { id: 3, name: "Chicken Wings", price: 349, category: "Starters" },
-    { id: 4, name: "Mushroom Chilli", price: 279, category: "Starters" },
-    { id: 5, name: "Crispy Corn", price: 229, category: "Starters" },
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [selected, setSelected] = useState<MenuItem[]>(selectedItems || []);
+  const [collapsed, setCollapsed] = useState<{ [key: string]: boolean }>({});
 
-    // Main Course
-    { id: 6, name: "Butter Chicken", price: 399, category: "Main Course" },
-    {
-      id: 7,
-      name: "Paneer Butter Masala",
-      price: 349,
-      category: "Main Course",
-    },
-    { id: 8, name: "Dal Makhani", price: 299, category: "Main Course" },
-    { id: 9, name: "Veg Biryani", price: 329, category: "Main Course" },
-    { id: 10, name: "Chicken Biryani", price: 399, category: "Main Course" },
+  useEffect(() => {
+    fetch("/api/menu")
+      .then(res => {
+        if (!res.ok) throw new Error("Failed to fetch menu");
+        return res.json();
+      })
+      .then(data => {
+        setMenuItems(data);
+        setLoading(false);
+        // Collapse all categories by default
+        const initialCollapsed: { [key: string]: boolean } = {};
+        [...new Set(data.map((item: MenuItem) => item.Course_Type))].forEach((cat: any) => {
+          initialCollapsed[cat] = true;
+        });
+        setCollapsed(initialCollapsed);
+      })
+      .catch(err => {
+        setLoading(false);
+        setError("Failed to load menu. Please try again later.");
+      });
+  }, []);
 
-    // Breads
-    { id: 11, name: "Butter Naan", price: 49, category: "Breads" },
-    { id: 12, name: "Garlic Naan", price: 59, category: "Breads" },
-    { id: 13, name: "Tandoori Roti", price: 39, category: "Breads" },
-    { id: 14, name: "Laccha Paratha", price: 69, category: "Breads" },
+  const categories = [...new Set(menuItems.map((item) => item.Course_Type))];
 
-    // Desserts
-    { id: 15, name: "Gulab Jamun", price: 149, category: "Desserts" },
-    { id: 16, name: "Chocolate Brownie", price: 199, category: "Desserts" },
-    { id: 17, name: "Ice Cream", price: 129, category: "Desserts" },
-    { id: 18, name: "Rasmalai", price: 179, category: "Desserts" },
-
-    // Beverages
-    { id: 19, name: "Fresh Lime Soda", price: 99, category: "Beverages" },
-    { id: 20, name: "Cold Coffee", price: 149, category: "Beverages" },
-    { id: 21, name: "Masala Chai", price: 79, category: "Beverages" },
-    { id: 22, name: "Fresh Fruit Juice", price: 129, category: "Beverages" },
-  ];
-
-  const categories = [...new Set(menuItems.map((item) => item.category))];
-
-  const [selected, setSelected] = useState<Item[]>(selectedItems || []);
-
-  const toggleItem = (item: Item) => {
-    if (selected.some((i) => i.id === item.id)) {
-      setSelected(selected.filter((i) => i.id !== item.id));
-      setItemsData(selected.filter((i) => i.id !== item.id));
+  const toggleItem = (item: MenuItem) => {
+    if (selected.some((i) => i._id === item._id)) {
+      setSelected(selected.filter((i) => i._id !== item._id));
+      setItemsData(selected.filter((i) => i._id !== item._id));
     } else {
       setSelected([...selected, item]);
       setItemsData([...selected, item]);
@@ -84,10 +73,44 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
     setPopup("");
   };
 
+  const COURSE_LABELS: Record<string, string> = {
+    Soups: "Soups",
+    Starter: "Starters",
+    Starters: "Starters",
+    Mains: "Main Course",
+    "Main Course": "Main Course",
+    Sides: "Sides",
+    Desserts: "Desserts",
+    Dessert: "Desserts",
+    Beverages: "Beverages",
+  };
+  const COURSE_PRICES: Record<string, number> = {
+    Soups: 149,
+    Starters: 299,
+    "Main Course": 299,
+    Sides: 149,
+    Desserts: 299,
+    Beverages: 149,
+  };
+  const allCourses = ["Soups", "Starters", "Main Course", "Sides", "Desserts", "Beverages"];
+
+  // Calculate course counts for footer summary
+  const courseCounts: Record<string, number> = {};
+  selected.forEach(item => {
+    const label = COURSE_LABELS[item.Course_Type] || item.Course_Type;
+    courseCounts[label] = (courseCounts[label] || 0) + 1;
+  });
+
+  if (loading) return <div>Loading menu...</div>;
+  if (error) return <div style={{ color: 'red', padding: 16 }}>{error}</div>;
+
   return (
     <div className={`${styles.popup} ${styles.itemsPopup}`}>
       <div className={styles.popupHeader}>
         <h2>Select Items</h2>
+        <p style={{ fontSize: 13, color: '#666', margin: '6px 0 0 2px', fontWeight: 400 }}>
+          Hassle-free cooking. Ingredient quantities and raw material details will be shared after booking.
+        </p>
         <button
           className={styles.closeButton}
           onClick={() => setPopup("")}>
@@ -97,42 +120,96 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
 
       <div className={`${styles.popupContent} ${styles.scrollableContent}`}>
         {categories.map((category) => (
-          <div
-            key={category}
-            className={styles.category}>
-            <h3 className={styles.categoryTitle}>{category}</h3>
-            <div className={styles.itemsList}>
-              {menuItems
-                .filter((item) => item.category === category)
-                .map((item) => (
-                  <div
-                    key={item.id}
-                    className={styles.itemCard}
-                    onClick={() => toggleItem(item)}>
-                    <div className={styles.itemInfo}>
-                      <div className={styles.itemName}>{item.name}</div>
-                      <div className={styles.itemPrice}>₹{item.price}</div>
-                    </div>
+          <div key={category} className={styles.category}>
+            <h3
+              className={styles.categoryTitle}
+              style={{
+                cursor: "pointer",
+                userSelect: "none",
+                display: "flex",
+                alignItems: "center",
+                fontWeight: 700,
+                background: "#f7f7fa",
+                borderRadius: 8,
+                padding: "10px 16px",
+                marginBottom: 8,
+                boxShadow: "0 1px 4px rgba(44,62,80,0.04)",
+                fontSize: 18,
+              }}
+              onClick={() => setCollapsed(prev => ({ ...prev, [category]: !prev[category] }))}
+            >
+              <span style={{ flex: 1, display: 'flex', alignItems: 'center' }}>
+                {COURSE_LABELS[category] || category}
+                <span style={{ color: '#ff8c1a', fontWeight: 500, fontSize: 14, marginLeft: 8 }}>
+                  (₹{COURSE_PRICES[COURSE_LABELS[category] || category] ?? 0})
+                </span>
+              </span>
+              <span style={{ fontSize: 18, marginLeft: 8, transition: "transform 0.2s", transform: collapsed[category] ? "rotate(0deg)" : "rotate(180deg)" }}>
+                ▼
+              </span>
+            </h3>
+            {!collapsed[category] && (
+              <div className={styles.itemsList}>
+                {menuItems
+                  .filter((item) => item.Course_Type === category)
+                  .map((item) => (
                     <div
-                      className={`${styles.checkbox} ${
-                        selected.some((i) => i.id === item.id)
-                          ? styles.checked
-                          : ""
-                      }`}>
-                      {selected.some((i) => i.id === item.id) && (
-                        <Check size={16} />
-                      )}
+                      key={item._id}
+                      className={styles.itemCard}
+                      onClick={() => toggleItem(item)}
+                    >
+                      <div className={styles.itemInfo}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          {item.Classification && item.Classification !== '-' && (
+                            <span
+                              style={{
+                                display: "inline-block",
+                                width: 10,
+                                height: 10,
+                                borderRadius: "50%",
+                                background: item.Classification === "Veg" ? "#43a047" : "#d32f2f",
+                                border: "1.5px solid #888",
+                              }}
+                            />
+                          )}
+                          <span className={styles.itemName}>{item.Dish_Name}</span>
+                        </div>
+                        {((item.Cuisine && item.Cuisine !== '-') || item.Remarks) && (
+                          <div style={{ fontSize: 12, color: "#666", marginTop: 2 }}>
+                            {item.Cuisine && item.Cuisine !== '-' && <>{item.Cuisine}</>}
+                            {item.Cuisine && item.Cuisine !== '-' && item.Remarks && <> | </>}
+                            {item.Remarks && <span>{item.Remarks}</span>}
+                          </div>
+                        )}
+                      </div>
+                      <div
+                        className={`${styles.checkbox} ${
+                          selected.some((i) => i._id === item._id)
+                            ? styles.checked
+                            : ""
+                        }`}
+                      >
+                        {selected.some((i) => i._id === item._id) && <Check size={16} />}
+                      </div>
                     </div>
-                  </div>
-                ))}
-            </div>
+                  ))}
+              </div>
+            )}
           </div>
         ))}
       </div>
-
       <div className={styles.popupFooter}>
         <div className={styles.selectedCount}>
-          {selected.length} items selected
+          <div>
+            <span>Soups: {courseCounts["Soups"] || 0}</span>
+            <span style={{ marginLeft: 16 }}>Starters: {courseCounts["Starters"] || 0}</span>
+            <span style={{ marginLeft: 16 }}>Main Course: {courseCounts["Main Course"] || 0}</span>
+          </div>
+          <div>
+            <span>Sides: {courseCounts["Sides"] || 0}</span>
+            <span style={{ marginLeft: 16 }}>Desserts: {courseCounts["Desserts"] || 0}</span>
+            <span style={{ marginLeft: 16 }}>Beverages: {courseCounts["Beverages"] || 0}</span>
+          </div>
         </div>
         <button
           className={styles.doneButton}

@@ -1,10 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { authSlice } from "./authSlice";
+import bookingReducer from "../booking/bookingSlice";
+import waiterBartenderBookingReducer from "../booking/waiterBartenderBookingSlice";
 
-const authStore = configureStore({
+const store = configureStore({
     reducer: {
-        auth: authSlice.reducer
+        auth: authSlice.reducer,
+        booking: bookingReducer,
+        waiterBartenderBooking: waiterBartenderBookingReducer,
     }
 });
 
-export default authStore;
+export default store;

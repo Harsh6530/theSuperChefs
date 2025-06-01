@@ -29,7 +29,7 @@ export default function Home() {
         <Services />
         <Special />
         <Safety />
-        <HowItWorks />
+        {/* <HowItWorks /> */}
         <Gallery />
         {/* Add more sections here as needed */}
       </main>

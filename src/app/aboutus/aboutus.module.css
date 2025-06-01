@@ -1,0 +1,151 @@
+.aboutContainer {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 40px 16px 60px 16px;
+  background: #fff;
+}
+
+.missionSection {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.missionSection h1 {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: #18181b;
+  margin-bottom: 18px;
+  letter-spacing: -1px;
+}
+
+.missionText {
+  font-size: 1.2rem;
+  color: #444;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.brand {
+  color: #ff8c1a;
+  font-weight: 700;
+  font-size: 1.25em;
+}
+
+.foundersSection {
+  margin-top: 32px;
+}
+
+.foundersSection h2 {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #23262b;
+  margin-bottom: 36px;
+}
+
+.foundersGrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  justify-content: center;
+}
+
+.founderCard {
+  background: #e28a31;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px 0 rgba(255, 140, 26, 0.08);
+  padding: 32px 28px 24px 28px;
+  max-width: 320px;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: box-shadow 0.18s, transform 0.18s;
+}
+
+.founderCard:hover {
+  box-shadow: 0 8px 32px 0 rgba(255, 140, 26, 0.18);
+  transform: translateY(-4px) scale(1.03);
+}
+
+.founderImgWrap {
+  margin-bottom: 18px;
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 2px 12px 0 rgba(44, 62, 80, 0.08);
+}
+
+.founderImg {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.founderInfo {
+  text-align: center;
+}
+
+.founderInfo h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ededed;
+  margin-bottom: 4px;
+}
+
+.college {
+  font-size: 1rem;
+  color: #000000;
+  margin-bottom: 8px;
+}
+
+.linkedinLink {
+  display: inline-block;
+  margin-bottom: 10px;
+  transition: transform 0.15s;
+}
+
+.linkedinLink:hover {
+  transform: scale(1.15);
+}
+
+.founderDesc {
+  font-size: 1rem;
+  color: #444;
+  margin-top: 8px;
+  line-height: 1.5;
+}
+
+@media (max-width: 900px) {
+  .foundersGrid {
+    gap: 20px;
+  }
+  .founderCard {
+    max-width: 95vw;
+    min-width: 220px;
+    padding: 24px 10px 18px 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .aboutContainer {
+    padding: 18px 2vw 32px 2vw;
+  }
+  .missionSection h1 {
+    font-size: 2rem;
+  }
+  .missionText {
+    font-size: 1rem;
+  }
+  .foundersSection h2 {
+    font-size: 1.3rem;
+  }
+  .foundersGrid {
+    flex-direction: column;
+    gap: 18px;
+  }
+  .founderCard {
+    max-width: 100%;
+    min-width: 0;
+    padding: 18px 4vw 14px 4vw;
+  }
+} 

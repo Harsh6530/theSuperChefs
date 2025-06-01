@@ -9,14 +9,14 @@ export async function POST(request: Request) {
 
     if (!orders?.success) {
       return NextResponse.json(
-        { error: "Failed to create order", orders },
+        { error: "Failed to get order", orders },
         { status: 500 }
       );
     }
     return NextResponse.json({ orders }, { status: 200 });
   } catch {
     return NextResponse.json(
-      { error: "Failed to create order", orders: null },
+      { error: "Failed to get order", orders: null },
       { status: 500 }
     );
   }

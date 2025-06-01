@@ -34,9 +34,12 @@ export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
         </div>
         <div className="flex gap-3">
           <a
-            href="#"
+            href="https://www.instagram.com/thesuperchefs_/"
             aria-label="Instagram"
-            className="transition-transform hover:scale-110">
+            className="transition-transform hover:scale-110"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Image
               src="/instagram.png"
               alt="Instagram"
@@ -45,9 +48,12 @@ export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
             />
           </a>
           <a
-            href="#"
+            href="https://www.facebook.com/profile.php?id=61573551214230"
             aria-label="Facebook"
-            className="transition-transform hover:scale-110">
+            className="transition-transform hover:scale-110"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Image
               src="/facebook.png"
               alt="Facebook"
@@ -56,9 +62,12 @@ export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
             />
           </a>
           <a
-            href="#"
+            href="https://wa.me/918081035820"
             aria-label="WhatsApp"
-            className="transition-transform hover:scale-110">
+            className="transition-transform hover:scale-110"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Image
               src="/whatsapp.png"
               alt="WhatsApp"
@@ -67,9 +76,12 @@ export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
             />
           </a>
           <a
-            href="#"
+            href="https://www.linkedin.com/company/the-superchefs/about/?viewAsMember=true"
             aria-label="LinkedIn"
-            className="transition-transform hover:scale-110">
+            className="transition-transform hover:scale-110"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <Image
               src="/link.png"
               alt="LinkedIn"
@@ -106,6 +118,13 @@ export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
               currentPage === "contact" ? styles.activeNav : ""
             }`}>
             Contact us
+          </a>
+          <a
+            href="/aboutus"
+            className={`${styles.navBtn} ${
+              currentPage === "aboutus" ? styles.activeNav : ""
+            }`}>
+            About Us
           </a>
           {isLoggedIn ? (
             <button

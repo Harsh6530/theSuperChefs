@@ -77,11 +77,17 @@ const RightSidebar: React.FC<RightSidebarProps> = ({ isOpen, onClose }) => {
         {/* Profile Section */}
         <div className={styles.profileSection}>
           <div className={styles.avatarContainer}>
+            {userData.avatar ? (
             <img
-              src={userData.avatar || "/placeholder.svg"}
+                src={userData.avatar}
               alt="Profile"
               className={styles.avatar}
             />
+            ) : (
+              <div className={styles.avatarFallback}>
+                {(userData.name?.[0] || "U").toUpperCase()}
+              </div>
+            )}
           </div>
 
           <div className={styles.userInfo}>
