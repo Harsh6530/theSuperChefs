@@ -15,11 +15,13 @@ interface HeaderProps {
 export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
   const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
   const [isMobile, setIsMobile] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth <= 640);
     checkMobile();
     window.addEventListener("resize", checkMobile);
+    setMounted(true);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
@@ -141,19 +143,22 @@ export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
             }`}>
             {isMobile ? "About" : "About Us"}
           </a>
-          {isLoggedIn ? (
-            <button
-              onClick={() => setSidebarOpen(true)}>
-              <Menu size={24} />
-            </button>
-          ) : (
-            <a
-              href="auth/login"
-              className={`${styles.navBtn} ${
-                currentPage === "contact" ? styles.activeNav : ""
-              }`}>
-              Login
-            </a>
+          {mounted && (
+            isLoggedIn ? (
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className={styles.navBtn}>
+                <Menu size={24} />
+              </button>
+            ) : (
+              <a
+                href="auth/login"
+                className={`${styles.navBtn} ${
+                  currentPage === "contact" ? styles.activeNav : ""
+                }`}>
+                Login
+              </a>
+            )
           )}
         </nav>
       </div>
