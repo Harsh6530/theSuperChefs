@@ -2,23 +2,35 @@
   background: #f7f7f7;
   padding: 64px 0 48px 0;
 }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
 .centered {
   text-align: center;
   margin-bottom: 2.5rem;
 }
+
 .heading {
   font-size: 2rem;
   font-weight: 800;
   margin-bottom: 0.5rem;
   color: #18181b;
+  line-height: 1.2;
 }
+
 .subheading {
   font-size: 1rem;
   color: #444;
   font-weight: 400;
   max-width: 700px;
   margin: 0 auto 1.5rem auto;
+  line-height: 1.6;
 }
+
 .goldLine {
   width: 48px;
   height: 3px;
@@ -26,45 +38,59 @@
   margin: 0.75rem auto 0.5rem auto;
   border-radius: 2px;
 }
+
 .cards {
   display: flex;
   flex-wrap: wrap;
   gap: 2rem;
   justify-content: center;
 }
+
 .card {
   background: #fff;
   border-radius: 16px;
-  box-shadow: 0 2px 16px 0 rgba(0,0,0,0.07);
+  box-shadow: 0 2px 16px 0 rgba(0, 0, 0, 0.07);
   overflow: hidden;
   max-width: 370px;
   min-width: 300px;
   flex: 1 1 320px;
   display: flex;
   flex-direction: column;
-  transition: box-shadow 0.2s;
+  transition: all 0.3s ease;
 }
+
 .card:hover {
-  box-shadow: 0 6px 32px 0 rgba(0,0,0,0.13);
+  box-shadow: 0 6px 32px 0 rgba(0, 0, 0, 0.13);
+  transform: translateY(-4px);
 }
+
 .cardHeader {
   background: #23262b;
   color: #fbbf24;
-  font-size: 1.1rem;
-  font-weight: 600;
   padding: 2rem 2rem 1.2rem 2rem;
   border-bottom: 1px solid #23262b;
   position: relative;
 }
+
+.cardTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  line-height: 1.3;
+}
+
 .cardHeader .goldLine {
   margin: 0.75rem 0 0.5rem 0;
 }
+
 .cardSub {
   color: #fff;
   font-size: 0.9rem;
   font-weight: 400;
   margin-bottom: 0.5rem;
+  line-height: 1.4;
 }
+
 .cardBody {
   padding: 1.5rem 2rem 2rem 2rem;
   background: #fff;
@@ -75,74 +101,313 @@
   flex-direction: column;
   gap: 0.5rem;
 }
-.cardBody ul {
+
+.featureList {
   margin-bottom: 0.5rem;
   padding-left: 1.2em;
+  list-style: none;
 }
-.cardBody li {
+
+.featureList li {
   margin-bottom: 0.4em;
-  list-style: disc;
+  position: relative;
+  padding-left: 1em;
 }
-.cardBody .price {
+
+.featureList li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #fbbf24;
+  font-weight: bold;
+}
+
+.description {
   margin-top: 0.5rem;
+  line-height: 1.5;
+}
+
+.price {
+  margin-top: 1rem;
   font-size: 1.1rem;
   font-weight: 600;
 }
-.cardBody .price small {
+
+.price small {
   font-size: 0.95rem;
   font-weight: 400;
   color: #444;
   font-style: italic;
   margin-right: 0.3em;
 }
-.cardBody .price strong {
+
+.price strong {
   font-size: 1.5rem;
   font-weight: 700;
   margin-right: 0.2em;
+  color: #fbbf24;
 }
-.cardBody .knowMoreBtn {
-  margin-top: 1.5em;
+
+.buttonGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.bookNowBtn,
+.knowMoreBtn {
   border: 1.5px solid #fbbf24;
-  color: #23262b;
-  background: #fff;
   border-radius: 8px;
   padding: 0.8em 0;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 500;
-  transition: background 0.18s, color 0.18s;
+  transition: all 0.3s ease;
   cursor: pointer;
   width: 100%;
   letter-spacing: 0.01em;
+  min-height: 44px;
+  touch-action: manipulation;
 }
 
-.cardBody .bookNowBtn {
-  margin-top: 1.5em;
-  border: 1.5px solid #fbbf24;
-  color: #23262b;
+.bookNowBtn {
+  color: #fff;
   background: #fbbf24;
-  border-radius: 8px;
-  padding: 0.8em 0;
-  font-size: 0.8rem;
-  font-weight: 500;
-  transition: background 0.18s, color 0.18s;
-  cursor: pointer;
-  width: 100%;
 }
-.cardBody .bookNowBtn:hover {
+
+.bookNowBtn:hover {
   background: #23262b;
   color: #fbbf24;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
 }
-.cardBody .knowMoreBtn:hover {
+
+.bookNowBtn:active {
+  transform: translateY(0);
+}
+
+.knowMoreBtn {
+  color: #23262b;
+  background: #fff;
+}
+
+.knowMoreBtn:hover {
   background: #fbbf24;
   color: #23262b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.2);
 }
+
+.knowMoreBtn:active {
+  transform: translateY(0);
+}
+
+/* Tablet styles */
 @media (max-width: 1100px) {
   .cards {
     flex-direction: column;
     align-items: center;
+    gap: 1.5rem;
   }
+
   .card {
-    max-width: 95vw;
-    min-width: 0;
+    max-width: 100%;
+    border-radius: 12px;
+    min-height: fit-content;
   }
-} 
+}
+
+/* Mobile styles */
+@media (max-width: 768px) {
+  .servicesSection {
+    padding: 48px 0 32px 0;
+  }
+
+  .container {
+    padding: 0 16px;
+  }
+
+  .centered {
+    margin-bottom: 2rem;
+  }
+
+  .heading {
+    font-size: 1.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .subheading {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .cards {
+    gap: 1.25rem;
+  }
+
+  .card {
+    max-width: 100%;
+    border-radius: 12px;
+    min-height: fit-content;
+  }
+
+  .cardHeader {
+    padding: 1.5rem 1.5rem 1rem 1.5rem;
+  }
+
+  .cardTitle {
+    font-size: 1rem;
+  }
+
+  .cardSub {
+    font-size: 0.85rem;
+  }
+
+  .cardBody {
+    padding: 1.25rem 1.5rem 2rem 1.5rem; /* Increased bottom padding */
+    font-size: 0.85rem;
+  }
+
+  .featureList li {
+    margin-bottom: 0.3em;
+    font-size: 0.85rem;
+  }
+
+  .description {
+    font-size: 0.85rem;
+    margin-bottom: 1rem; /* Added margin bottom */
+  }
+
+  .price {
+    font-size: 1rem;
+    margin-top: 0.75rem;
+    margin-bottom: 1rem; /* Added margin bottom */
+  }
+
+  .price strong {
+    font-size: 1.3rem;
+  }
+
+  .buttonGroup {
+    margin-top: 1.5rem;
+    gap: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .bookNowBtn,
+  .knowMoreBtn {
+    font-size: 0.9rem;
+    padding: 1rem 1.5rem;
+    min-height: 50px;
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    border-radius: 8px;
+    font-weight: 600;
+  }
+
+  .bookNowBtn {
+    order: 1;
+  }
+
+  .knowMoreBtn {
+    order: 2;
+  }
+}
+
+/* Small mobile styles */
+@media (max-width: 480px) {
+  .servicesSection {
+    padding: 32px 0 24px 0;
+  }
+
+  .container {
+    padding: 0 12px;
+  }
+
+  .heading {
+    font-size: 1.5rem;
+  }
+
+  .subheading {
+    font-size: 0.9rem;
+  }
+
+  .cardHeader {
+    padding: 1.25rem 1.25rem 0.75rem 1.25rem;
+  }
+
+  .cardTitle {
+    font-size: 0.95rem;
+  }
+
+  .cardSub {
+    font-size: 0.8rem;
+  }
+
+  .cardBody {
+    padding: 1rem 1.25rem 2rem 1.25rem; /* Increased bottom padding */
+    font-size: 0.8rem;
+  }
+
+  .featureList li {
+    font-size: 0.8rem;
+  }
+
+  .description {
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+  }
+
+  .price {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+  }
+
+  .price strong {
+    font-size: 1.2rem;
+  }
+
+  .buttonGroup {
+    margin-top: 1.5rem;
+    gap: 0.75rem;
+  }
+
+  .bookNowBtn,
+  .knowMoreBtn {
+    font-size: 0.85rem;
+    padding: 0.875rem 1rem;
+    min-height: 48px;
+    width: 100%;
+    display: block;
+  }
+}
+
+/* Landscape mobile styles */
+@media (max-width: 1100px) and (orientation: landscape) {
+  .servicesSection {
+    padding: 24px 0 16px 0;
+  }
+
+  .heading {
+    font-size: 1.5rem;
+  }
+
+  .subheading {
+    font-size: 0.9rem;
+  }
+
+  .cards {
+    gap: 1rem;
+  }
+
+  .cardHeader {
+    padding: 1rem 1.5rem 0.75rem 1.5rem;
+  }
+
+  .cardBody {
+    padding: 1rem 1.5rem 1.25rem 1.5rem;
+  }
+}

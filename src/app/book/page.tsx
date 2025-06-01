@@ -146,7 +146,7 @@ const Page = () => {
     setDateTime({ ...dateTime, date: dates[index] });
   };
 
-  const CITIES = ["Delhi NCR", "Mumbai", "Bangalore", "Chennai", "Kolkata"];
+  const CITIES = ["Delhi NCR", "Mumbai", "Bangalore", "Noida","Gurgaon","Ghaziabad", "Faridabad", "Gr Noida"];
   const WAITER_PRICE = 1500;
   const BARTENDER_PRICE = 2000;
 
