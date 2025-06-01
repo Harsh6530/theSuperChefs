@@ -11,7 +11,7 @@ interface CityPopupProps {
   cities?: string[];
 }
 
-const DEFAULT_CITIES = ["Delhi NCR", "Bangalore", "Mumbai", "Pune"];
+const DEFAULT_CITIES = ["Delhi", "Bangalore", "Mumbai", "Pune","Noida","Gurgaon","Ghaziabad", "Faridabad", "Gr Noida"];
 
 const CityPopup: React.FC<CityPopupProps> = ({ setPopup, selectedCity, setSelectedCity, cities = DEFAULT_CITIES }) => {
   const handleCitySelect = (city: string) => {

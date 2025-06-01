@@ -192,7 +192,7 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedI
           }}>
             The booking fee of ₹{BOOKING_FEE} will be deducted from your final bill
           </div>
-          <div style={{
+          {/* <div style={{
             color: '#219653',
             fontSize: '14px',
             marginTop: '12px',
@@ -203,7 +203,7 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedI
             padding: '8px'
           }}>
             After paying the booking amount, you will receive a call within 60 minutes for confirmation and to convey the ingredients.
-          </div>
+          </div> */}
         </div>
       </div>
 

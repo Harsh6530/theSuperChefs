@@ -147,7 +147,8 @@ export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
             isLoggedIn ? (
               <button
                 onClick={() => setSidebarOpen(true)}
-                className={styles.navBtn}>
+                className={styles.navBtn}
+              >
                 <Menu size={24} />
               </button>
             ) : (
@@ -155,7 +156,8 @@ export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
                 href="auth/login"
                 className={`${styles.navBtn} ${
                   currentPage === "contact" ? styles.activeNav : ""
-                }`}>
+                }`}
+              >
                 Login
               </a>
             )
