@@ -4,7 +4,7 @@ import { Menu } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { checkAuth } from "../../../redux/auth/authSlice";
-import type { RootState } from "../../../redux/store";
+import store from "../../../redux/auth/store";
 
 interface HeaderProps {
   currentPage?: string;
@@ -12,7 +12,7 @@ interface HeaderProps {
 }
 
 export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
-  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
+  const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
   return (
     <header className={`${styles.header} sticky top-0 z-50`}>
       {/* Top Bar */}
@@ -112,13 +112,18 @@ export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
             }`}>
             Our services
           </a>
-          <a
-            href="#contact"
-            className={`${styles.navBtn} ${
-              currentPage === "contact" ? styles.activeNav : ""
-            }`}>
+          <button
+            className={`${styles.navBtn} ${currentPage === "contact" ? styles.activeNav : ""}`}
+            onClick={() => {
+              const footer = document.getElementById('footer');
+              if (footer) {
+                footer.scrollIntoView({ behavior: 'smooth' });
+              }
+            }}
+            style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
+          >
             Contact us
-          </a>
+          </button>
           <a
             href="/aboutus"
             className={`${styles.navBtn} ${
