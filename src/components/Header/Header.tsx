@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { checkAuth } from "../../../redux/auth/authSlice";
 import store from "../../../redux/auth/store";
+import { useEffect, useState } from "react";
 
 interface HeaderProps {
   currentPage?: string;
@@ -13,6 +14,15 @@ interface HeaderProps {
 
 export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
   const isLoggedIn = useSelector((state: any) => state.auth.isLoggedIn);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth <= 640);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
   return (
     <header className={`${styles.header} sticky top-0 z-50`}>
       {/* Top Bar */}
@@ -110,7 +120,7 @@ export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
             className={`${styles.navBtn} ${
               currentPage === "services" ? styles.activeNav : ""
             }`}>
-            Our services
+            {isMobile ? "Services" : "Our services"}
           </a>
           <button
             className={`${styles.navBtn} ${currentPage === "contact" ? styles.activeNav : ""}`}
@@ -122,14 +132,14 @@ export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
             }}
             style={{ background: 'none', border: 'none', padding: 0, cursor: 'pointer' }}
           >
-            Contact us
+            {isMobile ? "Contact" : "Contact us"}
           </button>
           <a
             href="/aboutus"
             className={`${styles.navBtn} ${
               currentPage === "aboutus" ? styles.activeNav : ""
             }`}>
-            About Us
+            {isMobile ? "About" : "About Us"}
           </a>
           {isLoggedIn ? (
             <button

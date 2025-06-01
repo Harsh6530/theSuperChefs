@@ -224,7 +224,13 @@
   }
 
   .container {
-    padding: 0 16px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 2px 16px 0 rgba(0,0,0,0.07);
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
   }
 
   .centered {
@@ -248,7 +254,9 @@
   .card {
     max-width: 100%;
     border-radius: 12px;
-    min-height: fit-content;
+    min-height: unset;
+    flex: unset;
+    overflow: visible;
   }
 
   .cardHeader {
@@ -264,8 +272,10 @@
   }
 
   .cardBody {
-    padding: 1.25rem 1.5rem 2rem 1.5rem; /* Increased bottom padding */
+    padding: 1.25rem 1.5rem 2rem 1.5rem;
     font-size: 0.85rem;
+    overflow: visible;
+    gap: 0.3rem;
   }
 
   .featureList li {
@@ -275,13 +285,13 @@
 
   .description {
     font-size: 0.85rem;
-    margin-bottom: 1rem; /* Added margin bottom */
+    margin-bottom: 1rem;
   }
 
   .price {
     font-size: 1rem;
     margin-top: 0.75rem;
-    margin-bottom: 1rem; /* Added margin bottom */
+    margin-bottom: 1rem;
   }
 
   .price strong {
@@ -324,7 +334,13 @@
   }
 
   .container {
-    padding: 0 12px;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+    background: #fff;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px 0 rgba(0,0,0,0.09);
+    margin-top: 0.8rem;
+    margin-bottom: 0.8rem;
   }
 
   .heading {
