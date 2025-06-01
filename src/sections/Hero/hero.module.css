@@ -31,6 +31,7 @@
   gap: 1.5rem;
   text-align: left;
 }
+/* Force white text on all platforms due to color issues on Windows/Android */
 .heading {
   margin-top: 150px;
   font-size: 2rem;
@@ -40,17 +41,20 @@
   text-align: left;
   justify-content: flex-start;
   overflow: hidden;
+  color: #fff !important;
 }
 
 
 @media (min-width: 640px) {
   .heading { font-size: 3.33rem; }
 }
+/* Force white text on all platforms due to color issues on Windows/Android */
 .subheading {
   font-size: 1.1rem;
   font-weight: 500;
   margin-top: 0.5rem;
   text-align: left;
+  color: #fff !important;
 }
 .cursiveEmphasis {
   font-family: 'Dancing Script', 'Pacifico', cursive, 'Poppins', 'Montserrat', 'Inter', Arial, sans-serif;
