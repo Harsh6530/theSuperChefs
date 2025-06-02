@@ -1,17 +1,17 @@
 import mongoose from "mongoose";
 
 const waiterBartenderOrderSchema = new mongoose.Schema({
-  user: { type: String, required: true },
-  date: { type: String, required: true },
-  time: { type: String, required: true },
-  numWaiters: { type: Number, required: true },
-  numBartenders: { type: Number, required: true },
+  user: { type: String },
+  date: { type: String },
+  time: { type: String },
+  numWaiters: { type: Number },
+  numBartenders: { type: Number },
   couponApplied: { type: Boolean, default: false },
-  totalAmount: { type: Number, required: true },
+  totalAmount: { type: Number },
   bookingFee: { type: Number, default: 199 },
   paymentStatus: { type: String, default: "pending" },
-  city: { type: String, required: true },
-  address: { type: String, required: true },
+  city: { type: String },
+  address: { type: String },
   remarks: { type: String },
   createdAt: { type: Date, default: Date.now },
 });
