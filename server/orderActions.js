@@ -21,6 +21,8 @@ export const createOrder = async (data) => {
       success: false,
       status: 500,
       message: "Error creating order",
+      error: error.message,
+      stack: error.stack,
     };
   }
 };
