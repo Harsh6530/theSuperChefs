@@ -10,7 +10,11 @@ interface DetailsPopupProps {
   numWaiters: number;
   numBartenders: number;
   couponApplied: boolean;
-  selectedDate: string;
+  selectedDate: {
+    day: string;
+    month: string;
+    dateNum: number;
+  };
   selectedTime: string;
   city: string;
   address: string;
@@ -86,7 +90,7 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, numWaiters, numBa
         </div>
         <div className={styles.detailsSection}>
           <h3 className={styles.detailsSectionTitle} style={{color: '#ff8c1a', fontWeight: 700, fontSize: 20, marginBottom: 10, letterSpacing: 1}}>Date & Time</h3>
-          <div className={styles.detailsRow}><span>Date</span><span>{selectedDate}</span></div>
+          <div className={styles.detailsRow}><span>Date</span><span>{selectedDate.day} {selectedDate.dateNum} {selectedDate.month}</span></div>
           <div className={styles.detailsRow}><span>Time</span><span>{selectedTime}</span></div>
         </div>
         <div className={styles.detailsSection}>

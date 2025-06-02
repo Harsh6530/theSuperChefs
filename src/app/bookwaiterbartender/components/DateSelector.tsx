@@ -3,8 +3,8 @@ import React from "react";
 import styles from "../../book/book.module.css";
 
 interface DateSelectorProps {
-  selectedDate: number;
-  setSelectedDate: (index: number) => void;
+  selectedDate: any;
+  setSelectedDate: (index: any) => void;
 }
 
 const DateSelector: React.FC<DateSelectorProps> = ({ selectedDate, setSelectedDate }) => {
@@ -24,9 +24,9 @@ const DateSelector: React.FC<DateSelectorProps> = ({ selectedDate, setSelectedDa
       <ul className={styles.dates}>
         {dates.map((elem, index) => (
           <li
-            className={`${styles.date_element} ${selectedDate === index ? styles.selected : ""}`}
+            className={`${styles.date_element} ${JSON.stringify(selectedDate) === JSON.stringify(dates[index]) ? styles.selected : ""}`}
             key={index}
-            onClick={() => setSelectedDate(index)}
+            onClick={() => setSelectedDate(dates[index])}
           >
             <p>{elem.month}</p>
             <p className={styles.dateNum}>{elem.dateNum}</p>
