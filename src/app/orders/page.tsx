@@ -15,25 +15,24 @@ import {
 const OrdersPage = () => {
   const router = useRouter();
   type Order = {
-    id: string | number;
+    _id: string;
     status: string;
-    amount: number;
-    paidAmount: number;
     date: string;
     time: string;
-    guests: {
+    members: {
       adults: number;
       children: number;
     };
     address: string;
     items: { name: string }[];
-    referenceId: string;
-    txnId: string;
+    ref_id: string;
+    txn_id: string;
+    total: number;
   };
 
   const [ordersData, setOrdersData] = useState<Order[]>([]);
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "completed":
         return styles.completed;
@@ -74,7 +73,7 @@ const OrdersPage = () => {
     }
   };
 
-  const handleOrderClick = (orderId) => {
+  const handleOrderClick = (orderId: string) => {
     router.push(`/orders/${orderId}`);
   };
 
@@ -114,9 +113,9 @@ const OrdersPage = () => {
               <div className={styles.ordersList}>
                 {ordersData.map((order) => (
                   <div
-                    key={order.id}
+                    key={order._id}
                     className={styles.orderCard}
-                    onClick={() => handleOrderClick(order.id)}>
+                    onClick={() => handleOrderClick(order._id)}>
                     {/* Order Header */}
                     <div className={styles.orderHeader}>
                       <div className={styles.orderInfo}>

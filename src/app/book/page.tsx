@@ -47,6 +47,22 @@ const Page = () => {
 
   useEffect(() => {
     dispatch(checkAuth());
+    // Preload booking data from localStorage
+    const bookingDataString = localStorage.getItem("order-data");
+    if (bookingDataString) {
+      const bookingData = JSON.parse(bookingDataString);
+      if (bookingData.guests) dispatch(setGuests(bookingData.guests) as any);
+      if (bookingData.selectedItems) dispatch(setSelectedItems(bookingData.selectedItems) as any);
+      if (bookingData.city) dispatch(setCity(bookingData.city) as any);
+      if (bookingData.address) dispatch(setAddress(bookingData.address) as any);
+      if (bookingData.remarks) dispatch(setRemarks(bookingData.remarks) as any);
+      if (bookingData.coupon) dispatch(setCoupon(bookingData.coupon) as any);
+      if (typeof bookingData.waiterCount === 'number') dispatch(setWaiterCount(bookingData.waiterCount) as any);
+      if (typeof bookingData.bartenderCount === 'number') dispatch(setBartenderCount(bookingData.bartenderCount) as any);
+      if (typeof bookingData.selectedDate === 'number') dispatch(setSelectedDate(bookingData.selectedDate) as any);
+      if (bookingData.selectedTime) dispatch(setSelectedTime(bookingData.selectedTime) as any);
+      if (bookingData.landmark) dispatch(setLandmark(bookingData.landmark) as any);
+    }
   }, [dispatch]);
 
   const currentDate = new Date();
