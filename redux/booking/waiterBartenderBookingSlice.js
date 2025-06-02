@@ -2,9 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   date: {
-    day:String,
-    month:String,
-    dateNum:Number
+    day:"",
+    month:"",
+    dateNum:0
   },
   time: "",
   numWaiters: 0,

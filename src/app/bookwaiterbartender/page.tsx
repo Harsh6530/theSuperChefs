@@ -31,7 +31,7 @@ import WaiterBartenderPopup from "./components/WaiterBartenderPopup";
 import AddressPopup from "./components/AddressPopup";
 import ReduxProvider from "../../../redux/ReduxProvider";
 import { X } from "lucide-react";
-
+import { ArrowLeft } from "lucide-react";
 const PageContent = () => {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -125,6 +125,11 @@ const PageContent = () => {
       <div className={styles.wrapper}>
         <div className={styles.white_bg}>
           <header className={styles.header}>
+            <button
+              className={styles.backButton}
+              onClick={() => router.back()}>
+              <ArrowLeft size={20} />
+            </button>
             <p>Booking Details</p>
           </header>
           <div className={styles.content}>
