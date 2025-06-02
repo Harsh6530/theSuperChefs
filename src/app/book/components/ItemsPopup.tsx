@@ -27,11 +27,9 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
   selectedItems,
   onItemsSelected,
 }) => {
-  const { itemsData, setItemsData } = useContext(dataContext);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selected, setSelected] = useState<MenuItem[]>(selectedItems || []);
   const [collapsed, setCollapsed] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
@@ -59,17 +57,15 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
   const categories = [...new Set(menuItems.map((item) => item.Course_Type))];
 
   const toggleItem = (item: MenuItem) => {
-    if (selected.some((i) => i._id === item._id)) {
-      setSelected(selected.filter((i) => i._id !== item._id));
-      setItemsData(selected.filter((i) => i._id !== item._id));
+    if (selectedItems.some((i) => i._id === item._id)) {
+      onItemsSelected(selectedItems.filter((i) => i._id !== item._id));
     } else {
-      setSelected([...selected, item]);
-      setItemsData([...selected, item]);
+      onItemsSelected([...selectedItems, item]);
     }
   };
 
   const handleDone = () => {
-    onItemsSelected(selected);
+    onItemsSelected(selectedItems);
     setPopup("");
   };
 
@@ -96,7 +92,7 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
 
   // Calculate course counts for footer summary
   const courseCounts: Record<string, number> = {};
-  selected.forEach(item => {
+  selectedItems.forEach(item => {
     const label = COURSE_LABELS[item.Course_Type] || item.Course_Type;
     courseCounts[label] = (courseCounts[label] || 0) + 1;
   });
@@ -184,12 +180,12 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
                       </div>
                       <div
                         className={`${styles.checkbox} ${
-                          selected.some((i) => i._id === item._id)
+                          selectedItems.some((i) => i._id === item._id)
                             ? styles.checked
                             : ""
                         }`}
                       >
-                        {selected.some((i) => i._id === item._id) && <Check size={16} />}
+                        {selectedItems.some((i) => i._id === item._id) && <Check size={16} />}
                       </div>
                     </div>
                   ))}

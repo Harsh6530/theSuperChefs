@@ -5,6 +5,7 @@ import styles from "../styles/popup.module.css";
 import { X, Clock } from "lucide-react";
 import { dataContext } from "@/app/context/dataContext";
 import { useContext } from "react";
+import { useSelector } from "react-redux";
 
 interface TimePopupProps {
   setPopup: (value: string) => void;
@@ -12,11 +13,7 @@ interface TimePopupProps {
   setSelectedTime: (time: string) => void;
 }
 
-const TimePopup: React.FC<TimePopupProps> = ({
-  setPopup,
-  selectedTime,
-  setSelectedTime,
-}) => {
+const TimePopup: React.FC<TimePopupProps> = ({ setPopup, setSelectedTime,selectedTime }) => {
   const { dateTime, setDateTime } = useContext(dataContext);
   const generateTimeSlots = () => {
     const slots = [];
@@ -25,17 +22,17 @@ const TimePopup: React.FC<TimePopupProps> = ({
     for (let hour = 10; hour <= 22; hour++) {
       for (let minute = 0; minute < 60; minute += 30) {
         if (hour === 22 && minute === 30) continue;
-
+        
         const slotDate = new Date(bufferDate);
         slotDate.setHours(hour, minute, 0, 0);
 
         // Only show slots after the buffer time
         if (slotDate > now) {
-        const hourFormatted = hour % 12 === 0 ? 12 : hour % 12;
-        const amPm = hour >= 12 ? "PM" : "AM";
-        const minuteFormatted = minute === 0 ? "00" : minute;
+          const hourFormatted = hour % 12 === 0 ? 12 : hour % 12;
+          const amPm = hour >= 12 ? "PM" : "AM";
+          const minuteFormatted = minute === 0 ? "00" : minute;
 
-        slots.push(`${hourFormatted}:${minuteFormatted} ${amPm}`);
+          slots.push(`${hourFormatted}:${minuteFormatted} ${amPm}`);
         }
       }
     }
