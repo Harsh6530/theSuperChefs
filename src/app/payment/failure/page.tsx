@@ -114,18 +114,6 @@ const FailurePage = () => {
 
                 <div className={styles.detailItem}>
                   <div className={styles.detailIcon}>
-                    <CreditCard size={20} />
-                  </div>
-                  <div className={styles.detailInfo}>
-                    <span className={styles.detailLabel}>Reference ID</span>
-                    <span className={styles.detailValue}>
-                      {transactionDetails.referenceId}
-                    </span>
-                  </div>
-                </div>
-
-                <div className={styles.detailItem}>
-                  <div className={styles.detailIcon}>
                     <XCircle size={20} />
                   </div>
                   <div className={styles.detailInfo}>

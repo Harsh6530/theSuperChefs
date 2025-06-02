@@ -29,12 +29,12 @@ export async function POST(req) {
       );
     }
 
-    // Initialize PhonePe client with production environment
+    // Initialize PhonePe client with SANDBOX environment
     const client = StandardCheckoutClient.getInstance(
       process.env.NEXT_API_MERCHANT_ID,
       process.env.NEXT_API_MERCHANT_KEY,
       parseInt(process.env.NEXT_API_MERCHANT_VERSION || "1"),
-      Env.PRODUCTION  // Always use production environment
+      Env.SANDBOX  // Changed to SANDBOX environment for testing
     );
 
     // Get the base URL from environment or default to production URL
@@ -44,14 +44,14 @@ export async function POST(req) {
     const request = StandardCheckoutPayRequest.builder()
       .merchantOrderId(data.merchantTransactionId)
       .amount(data.amount)
-      .redirectUrl(`${baseUrl}/api/paystatus`)  // Use production URL
+      .redirectUrl(`${baseUrl}/payment/success?transactionId=${data.merchantTransactionId}`)
       .build();
 
     // Debug logging
     console.log("Payment Request:", {
       merchantOrderId: data.merchantTransactionId,
       amount: data.amount,
-      redirectUrl: `${baseUrl}/api/paystatus`
+      redirectUrl: `${baseUrl}/payment/success?transactionId=${data.merchantTransactionId}`
     });
 
     // Initiate payment
