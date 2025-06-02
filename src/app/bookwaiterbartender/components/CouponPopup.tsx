@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import styles from "../../book/styles/popup.module.css";
 import { X } from "lucide-react";
+import CouponSection from "./CouponSection";
 
 interface CouponPopupProps {
   setPopup: (value: string) => void;
@@ -41,8 +42,13 @@ const CouponPopup: React.FC<CouponPopupProps> = ({ setPopup, coupon, setCoupon, 
         </button>
       </div>
       <div className={styles.popupContent}>
+        <CouponSection
+          couponApplied={couponApplied}
+          setCouponApplied={setCouponApplied}
+          setInput={setInput}
+        />
         <input
-          className={styles.selector}
+          className={`${styles.selector} mt-5`}
           style={{ width: "100%", fontSize: 16, marginBottom: 12 }}
           value={input}
           onChange={e => setInput(e.target.value)}
