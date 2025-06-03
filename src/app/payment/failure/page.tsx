@@ -54,7 +54,7 @@ const FailurePage = () => {
   }, [searchParams]);
 
   const handleRetryPayment = () => {
-    router.push("/payment");
+    router.push("/book");
   };
 
   const handleGoHome = () => {
