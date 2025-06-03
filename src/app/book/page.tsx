@@ -40,21 +40,9 @@ const Page = () => {
         name: string;
         email: string;
         phone: string;
-        _id: string;
       };
     };
-    booking: {
-      guests: { adults: number; children: number };
-      selectedItems: MenuItem[];
-      city: string;
-      address: string;
-      remarks: string;
-      coupon: string;
-      waiterCount: number;
-      bartenderCount: number;
-      selectedDate: any;
-      selectedTime: string;
-    };
+    booking: any;
   }
 
   useEffect(() => {
@@ -73,6 +61,7 @@ const Page = () => {
       if (typeof bookingData.bartenderCount === 'number') dispatch(setBartenderCount(bookingData.bartenderCount) as any);
       if (typeof bookingData.selectedDate === 'number') dispatch(setSelectedDate(bookingData.selectedDate) as any);
       if (bookingData.selectedTime) dispatch(setSelectedTime(bookingData.selectedTime) as any);
+      if (bookingData.landmark) dispatch(setLandmark(bookingData.landmark) as any);
     }
   }, [dispatch]);
 
@@ -220,7 +209,7 @@ const Page = () => {
 
   const [showDetails, setShowDetails] = useState(false);
 
-  const validator = async () => {
+  const validator = () => {
     if (
       selectedDate === null ||
       selectedTime === "" ||
@@ -231,46 +220,7 @@ const Page = () => {
       alert("Please fill all the details");
       return;
     }
-
-    try {
-      // Generate a unique booking ID
-      const bookingId = `booking_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-
-      const response = await fetch("/api/payment/initiate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          amount: discountedTotal,
-          currency: "INR",
-          receipt: `receipt_${Date.now()}`,
-          notes: {
-            bookingId,
-            userId: user._id,
-          },
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || "Failed to initiate payment");
-      }
-
-      if (!data.data || !data.data.redirectUrl) {
-        throw new Error("Invalid payment response: Missing redirect URL");
-      }
-
-      // Store booking data in localStorage before redirect
-      localStorage.setItem("order-data", JSON.stringify(booking));
-      
-      // Redirect to payment page
-      window.location.href = data.data.redirectUrl;
-    } catch (error) {
-      console.error("Error initiating payment:", error);
-      alert(error instanceof Error ? error.message : "Failed to initiate payment. Please try again.");
-    }
+    setPopup("address");
   };
 
   const booking = useSelector((state: RootState) => state.booking);
@@ -530,14 +480,16 @@ const Page = () => {
           {popup === "items" && (
             <ItemsPopup
               setPopup={setPopup}
-              selectedItems={selectedItems as MenuItem[]}
-              onItemsSelected={(items: MenuItem[]) => dispatch(setSelectedItems(items))}
+              selectedItems={selectedItems}
+              onItemsSelected={(items) => dispatch(setSelectedItems(items))}
             />
           )}
 
           {popup === "time" && (
             <TimePopup
               setPopup={setPopup}
+              selectedTime={selectedTime}
+              setSelectedTime={(time) => dispatch(setSelectedTime(time))}
             />
           )}
 
