@@ -16,7 +16,7 @@ export async function POST(req) {
       process.env.NEXT_API_MERCHANT_ID,
       process.env.NEXT_API_MERCHANT_KEY,
       parseInt(process.env.NEXT_API_MERCHANT_VERSION || "1"),
-      Env.PRODUCTION // Use SANDBOX environment as per your configuration
+      Env.SANDBOX // Use SANDBOX environment as per your configuration
     );
 
     // Validate the callback signature and payload
