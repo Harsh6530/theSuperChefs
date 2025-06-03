@@ -1,16 +1,14 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import styles from "./styles/bookwaiterandbartender.module.css";
 import DateSelector from "./components/DateSelector";
 import TimeSelector from "./components/TimeSelector";
 import CouponSection from "./components/CouponSection";
 import SummaryFooter from "./components/SummaryFooter";
-import { checkAuth } from "../../../redux/auth/authSlice";
 import DetailsPopup from "./components/DetailsPopup";
 import TimePopup from "./components/TimePopup";
 import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/navigation";
 import {
   setDate,
   setTime,
@@ -31,55 +29,12 @@ import WaiterBartenderPopup from "./components/WaiterBartenderPopup";
 import AddressPopup from "./components/AddressPopup";
 import ReduxProvider from "../../../redux/ReduxProvider";
 import { X } from "lucide-react";
-import { ArrowLeft } from "lucide-react";
+
 const PageContent = () => {
   const dispatch = useDispatch();
-  const router = useRouter();
+  const booking = useSelector((state: any) => state.waiterBartenderBooking);
   const [popup, setPopup] = useState("");
   const [showDetails, setShowDetails] = useState(false);
-
-  interface RootState {
-    auth: {
-      isLoggedIn: boolean;
-      token: string;
-      user: {
-        name: string;
-        email: string;
-        phone: string;
-      };
-    };
-    booking: {
-      date: {
-        day: string;
-        month: string;
-        dateNum: number;
-      };
-      time: string;
-      numWaiters: number;
-      numBartenders: number;
-      coupon: string;
-      couponApplied: boolean;
-      city: string;
-      address: string;
-      remarks: string;
-      totalAmount: number;
-    };
-  }
-
-  const isLoggedIn = useSelector((state: RootState) => state.auth.isLoggedIn);
-
-  const hasPushed = useRef(false);
-
-  if (!isLoggedIn && typeof window !== "undefined" && !hasPushed.current) {
-    hasPushed.current = true;
-    Promise.resolve().then(() => {
-      router.push("/auth/login");
-    });
-  }
-
-  const booking = useSelector(
-    (state: RootState) => state.waiterBartenderBooking
-  );
 
   // Handlers for popups
   const handleProceed = () => {
@@ -90,17 +45,6 @@ const PageContent = () => {
     dispatch(setCoupon(""));
     dispatch(setCouponApplied(false));
   };
-
-  const CITIES = [
-    "Delhi",
-    "Mumbai",
-    "Bangalore",
-    "Noida",
-    "Gurgaon",
-    "Ghaziabad",
-    "Faridabad",
-    "Gr Noida",
-  ];
 
   // Calculate total
   const WAITER_PRICE = 1499;
@@ -116,7 +60,7 @@ const PageContent = () => {
   // Update total in Redux
   useEffect(() => {
     dispatch(setTotalAmount(finalTotal));
-  }, [booking.numWaiters, booking.numBartenders, booking.couponApplied, finalTotal, dispatch]);
+  }, [booking.numWaiters, booking.numBartenders, booking.couponApplied]);
 
   return (
     <div
@@ -125,11 +69,6 @@ const PageContent = () => {
       <div className={styles.wrapper}>
         <div className={styles.white_bg}>
           <header className={styles.header}>
-            <button
-              className={styles.backButton}
-              onClick={() => router.back()}>
-              <ArrowLeft size={20} />
-            </button>
             <p>Booking Details</p>
           </header>
           <div className={styles.content}>
@@ -143,28 +82,13 @@ const PageContent = () => {
               onClick={() => setPopup("time")}
             />
             <div className={styles.selection}>
-              <label>City</label>
-              <select
-                name="city"
-                className={styles.selector}
-                value={booking.city}
-                onChange={(e) => {
-                  const selectedCity = e.target.value;
-                  dispatch(setCity(selectedCity));
-                }}>
-                <option
-                  value=""
-                  disabled>
-                  Select a city
-                </option>
-                {CITIES.map((city, index) => (
-                  <option
-                    key={index}
-                    value={city}>
-                    {city}
-                  </option>
-                ))}
-              </select>
+              {" "}
+              <label className={`mt-1 `}>Select City</label>
+              <button
+                onClick={() => setPopup("city")}
+                className={styles.selector}>
+                {booking.city ? booking.city : "Select City"}
+              </button>
             </div>
             <div className={styles.selection}>
               <label className={`mt-1 `}>Select Waiters and Bartenders</label>
@@ -213,10 +137,10 @@ const PageContent = () => {
           {popup === "waiterbartender" && (
             <WaiterBartenderPopup
               setPopup={setPopup}
-              numWaiters={booking.numWaiters}
-              setNumWaiters={(n) => dispatch(setNumWaiters(n))}
-              numBartenders={booking.numBartenders}
-              setNumBartenders={(n) => dispatch(setNumBartenders(n))}
+              waiterCount={booking.numWaiters}
+              setWaiterCount={(n) => dispatch(setNumWaiters(n))}
+              bartenderCount={booking.numBartenders}
+              setBartenderCount={(n) => dispatch(setNumBartenders(n))}
             />
           )}
           {popup === "coupon" && (
