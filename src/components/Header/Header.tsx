@@ -145,21 +145,21 @@ export default function Header({ setSidebarOpen, currentPage }: HeaderProps) {
           </a>
           {mounted && (
             isLoggedIn ? (
-            <button
+              <button
                 onClick={() => setSidebarOpen(true)}
                 className={styles.navBtn}
               >
-              <Menu size={24} />
-            </button>
-          ) : (
-            <a
-              href="auth/login"
-              className={`${styles.navBtn} ${
-                currentPage === "contact" ? styles.activeNav : ""
+                <Menu size={24} />
+              </button>
+            ) : (
+              <a
+                href="auth/login"
+                className={`${styles.navBtn} ${
+                  currentPage === "contact" ? styles.activeNav : ""
                 }`}
               >
-              Login
-            </a>
+                Login
+              </a>
             )
           )}
         </nav>
