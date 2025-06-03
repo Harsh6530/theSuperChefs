@@ -10,8 +10,8 @@ export async function POST(req) {
     
     // Debug logging
     console.log("Environment:", process.env.NODE_ENV);
-    console.log("Merchant ID:", process.env.NEXT_API_MERCHANT_ID);
-    console.log("Merchant Key:", process.env.NEXT_API_MERCHANT_KEY ? "Present" : "Missing");
+    console.log("PhonePe Client ID:", process.env.PHONEPE_CLIENT_ID);
+    console.log("PhonePe Client Secret:", process.env.PHONEPE_CLIENT_SECRET ? "Present" : "Missing");
     
     // Validate required fields
     if (!data.amount || !data.merchantTransactionId) {
@@ -22,19 +22,19 @@ export async function POST(req) {
     }
 
     // Validate environment variables
-    if (!process.env.NEXT_API_MERCHANT_ID || !process.env.NEXT_API_MERCHANT_KEY) {
+    if (!process.env.PHONEPE_CLIENT_ID || !process.env.PHONEPE_CLIENT_SECRET) {
       return NextResponse.json(
         { message: "Configuration Error", error: "Missing PhonePe credentials" },
         { status: 500 }
       );
     }
 
-    // Initialize PhonePe client with SANDBOX environment
+    // Initialize PhonePe client with PRODUCTION environment
     const client = StandardCheckoutClient.getInstance(
-      process.env.NEXT_API_MERCHANT_ID,
-      process.env.NEXT_API_MERCHANT_KEY,
-      parseInt(process.env.NEXT_API_MERCHANT_VERSION || "1"),
-      Env.SANDBOX  // Changed to SANDBOX environment for testing
+      process.env.PHONEPE_CLIENT_ID,
+      process.env.PHONEPE_CLIENT_SECRET,
+      parseInt(process.env.PHONEPE_CLIENT_VERSION || "1"),
+      Env.PRODUCTION // Use PRODUCTION for live
     );
 
     // Get the base URL from environment or default to production URL
