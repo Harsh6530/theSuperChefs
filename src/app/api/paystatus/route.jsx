@@ -40,7 +40,7 @@ export async function POST(req) {
       process.env.NEXT_API_MERCHANT_ID,
       process.env.NEXT_API_MERCHANT_KEY,
       parseInt(process.env.NEXT_API_MERCHANT_VERSION || "1"),
-      Env.PRODUCTION
+      Env.SANDBOX // Use SANDBOX environment as per your configuration
     );
 
     // Check payment status
