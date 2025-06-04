@@ -65,7 +65,7 @@ const Page = () => {
   });
 
   const [popup, setPopup] = useState("");
-  const [selectedDate, setSelectedDate] = useState(0);
+  const [selectedDate, setSelectedDateLocal] = useState(0);
   const [selectedTime, setSelectedTime] = useState("");
   const [guests, setGuests] = useState({ adults: 0, children: 0 });
   const [selectedItems, setSelectedItems] = useState<MenuItem[]>([]);
@@ -142,7 +142,8 @@ const Page = () => {
   }
 
   const selectDate = (index: number) => {
-    setSelectedDate(index);
+    setSelectedDateLocal(index);
+    dispatch(setSelectedDate(index));
     setDateTime({ ...dateTime, date: dates[index] });
   };
 
@@ -407,11 +408,7 @@ const Page = () => {
           )}
 
           {popup === "time" && (
-            <TimePopup
-              setPopup={setPopup}
-              selectedTime={selectedTime}
-              setSelectedTime={setSelectedTime}
-            />
+            <TimePopup setPopup={setPopup} />
           )}
 
           {popup === "address" && (

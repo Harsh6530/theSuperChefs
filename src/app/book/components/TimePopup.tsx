@@ -4,8 +4,10 @@ import React from "react";
 import styles from "../styles/popup.module.css";
 import { X, Clock } from "lucide-react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/../redux/auth/store"; // Adjust path if needed
-import { setSelectedTime } from "@/../redux/booking/bookingSlice"; // Adjust path if needed
+import store from "@/../redux/auth/store";
+import { setSelectedTime } from "@/../redux/booking/bookingSlice";
+
+type RootState = ReturnType<typeof store.getState>;
 
 interface TimePopupProps {
   setPopup: (value: string) => void;
@@ -19,12 +21,7 @@ const TimePopup: React.FC<TimePopupProps> = ({ setPopup }) => {
   const selectedTime = useSelector((state: RootState) => state.booking.selectedTime);
 
   // Validate date
-  if (
-    !selectedDate ||
-    !selectedDate.dateNum ||
-    !selectedDate.month ||
-    !selectedDate.day
-  ) {
+  if (selectedDate == null || selectedDate < 0) {
     return (
       <div className={styles.popup}>
         <div className={styles.popupHeader}>
@@ -43,33 +40,69 @@ const TimePopup: React.FC<TimePopupProps> = ({ setPopup }) => {
     );
   }
 
-  const generateTimeSlots = () => {
+  const generateTimeSlots = (): string[] => {
     const slots: string[] = [];
     const now = new Date();
-
     const currentHour = now.getHours();
+    const isAfter7PM = currentHour >= 19;
 
-    // Buffer date 24 hours ahead (not used further here, but keeping for reference)
-    const bufferDate = new Date(now.getTime() + 24 * 60 * 60 * 1000);
+    // Reconstruct the actual date for the selected index
+    const bookingDate = new Date();
+    bookingDate.setHours(0, 0, 0, 0);
+    bookingDate.setDate(bookingDate.getDate() + selectedDate + 1);
 
-    const startHour = currentHour >= 19 ? 19 : 13;
+    console.log({
+      now: now.toString(),
+      selectedDate,
+      bookingDate: bookingDate.toString(),
+      isAfter7PM
+    });
 
-    for (let hour = startHour; hour <= 22; hour++) {
+    // If booking for today, do not allow any slots (force user to pick a future date)
+    // if (selectedDate === 0) {
+    //   return slots;
+    // }
+
+    // If booking for next day
+    if (selectedDate === 0) {
+      // If booking after 7 PM, only allow slots after 7 PM next day
+      if (isAfter7PM) {
+        for (let hour = 19; hour <= 22; hour++) {
+          for (let minute = 0; minute < 60; minute += 30) {
+            if (hour === 22 && minute === 30) continue;
+            const hourFormatted = hour % 12 === 0 ? 12 : hour % 12;
+            const amPm = hour >= 12 ? "PM" : "AM";
+            const minuteFormatted = minute === 0 ? "00" : minute.toString();
+            slots.push(`${hourFormatted}:${minuteFormatted} ${amPm}`);
+          }
+        }
+        return slots;
+      } else {
+        // If booking before 7 PM, allow lunch (after 1 PM) and dinner
+        for (let hour = 13; hour <= 22; hour++) {
+          for (let minute = 0; minute < 60; minute += 30) {
+            if (hour === 22 && minute === 30) continue;
+            const hourFormatted = hour % 12 === 0 ? 12 : hour % 12;
+            const amPm = hour >= 12 ? "PM" : "AM";
+            const minuteFormatted = minute === 0 ? "00" : minute.toString();
+            slots.push(`${hourFormatted}:${minuteFormatted} ${amPm}`);
+          }
+        }
+        return slots;
+      }
+    }
+
+    // For all other future days, allow all slots from 1 PM to 10 PM
+    for (let hour = 13; hour <= 22; hour++) {
       for (let minute = 0; minute < 60; minute += 30) {
         if (hour === 22 && minute === 30) continue;
-
-        const slotDate = new Date(bufferDate);
-        slotDate.setHours(hour, minute, 0, 0);
-
-        // Only show slots after the buffer time
-        if (slotDate > now) {
         const hourFormatted = hour % 12 === 0 ? 12 : hour % 12;
         const amPm = hour >= 12 ? "PM" : "AM";
         const minuteFormatted = minute === 0 ? "00" : minute.toString();
-
         slots.push(`${hourFormatted}:${minuteFormatted} ${amPm}`);
       }
     }
+    console.log({ now, selectedDate, isAfter7PM });
     return slots;
   };
 
@@ -97,7 +130,7 @@ const TimePopup: React.FC<TimePopupProps> = ({ setPopup }) => {
 
       <div className={`${styles.popupContent} ${styles.scrollableContent}`}>
         <div className={styles.timeSlotContainer}>
-          {timeSlots.map((time, index) => (
+          {timeSlots.map((time: string, index: number) => (
             <div
               key={index}
               className={`${styles.timeSlot} ${
