@@ -25,8 +25,7 @@ import React from "react";
 const Page = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { totalData, setTotalData, dateTime, setDateTime } =
-    useContext(dataContext);
+  const { totalData, setTotalData, dateTime, setDateTime, itemsData } = useContext(dataContext);
 
   interface RootState {
     auth: {
@@ -66,9 +65,17 @@ const Page = () => {
 
   const [popup, setPopup] = useState("");
   const [selectedDate, setSelectedDateLocal] = useState(0);
-  const [selectedTime, setSelectedTime] = useState("");
+  const selectedTime = useSelector((state: RootState) => state.booking.selectedTime);
   const [guests, setGuests] = useState({ adults: 0, children: 0 });
   const [selectedItems, setSelectedItems] = useState<MenuItem[]>([]);
+
+  // Update selectedItems when itemsData changes
+  useEffect(() => {
+    if (itemsData) {
+      setSelectedItems(itemsData);
+    }
+  }, [itemsData]);
+
   const totalGuests = guests.adults + guests.children;
 
   interface MenuItem {
@@ -201,6 +208,10 @@ const Page = () => {
       setRemarks(booking.remarks || "");
     }
   }, [showDetails, booking.address, booking.remarks]);
+
+  // Construct date string for DetailsPopup
+  const selectedDateObj = dates[selectedDate];
+  const dateString = selectedDateObj ? `${selectedDateObj.day}, ${selectedDateObj.month} ${selectedDateObj.dateNum}` : "";
 
   return (
     <div className={styles.container}>
@@ -422,8 +433,8 @@ const Page = () => {
             <DetailsPopup
               setPopup={() => setShowDetails(false)}
               guests={guests}
-              selectedItems={uniqueSelectedItems}
-              totalAmount={discountedTotal}
+              selectedItems={selectedItems}
+              totalAmount={totalAmount}
               courseCounts={courseCounts}
               guestsTotal={guestsTotal}
               itemsTotal={itemsTotal}
@@ -436,6 +447,8 @@ const Page = () => {
               coupon={coupon}
               address={address}
               remarks={remarks}
+              date={dateString}
+              time={selectedTime}
             />
           )}
 

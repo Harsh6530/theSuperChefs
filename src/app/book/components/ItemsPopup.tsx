@@ -60,18 +60,31 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
 
   const toggleItem = (item: MenuItem) => {
     if (selected.some((i) => i._id === item._id)) {
-      setSelected(selected.filter((i) => i._id !== item._id));
-      setItemsData(selected.filter((i) => i._id !== item._id));
+      const newSelected = selected.filter((i) => i._id !== item._id);
+      setSelected(newSelected);
+      setItemsData(newSelected);
     } else {
-      setSelected([...selected, item]);
-      setItemsData([...selected, item]);
+      const newSelected = [...selected, item];
+      setSelected(newSelected);
+      setItemsData(newSelected);
     }
   };
 
   const handleDone = () => {
-    onItemsSelected(selected);
+    // Ensure we're using the latest selected items
+    const finalSelected = [...selected];
+    onItemsSelected(finalSelected);
+    setItemsData(finalSelected);
     setPopup("");
   };
+
+  // Update selected state when selectedItems prop changes
+  useEffect(() => {
+    if (selectedItems) {
+      setSelected(selectedItems);
+      setItemsData(selectedItems);
+    }
+  }, [selectedItems]);
 
   const COURSE_LABELS: Record<string, string> = {
     Soups: "Soups",

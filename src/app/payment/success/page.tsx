@@ -21,37 +21,35 @@ const SuccessPage = () => {
     amount: "",
     date: "",
     time: "",
-    status: "Success",
-    referenceId: "",
+    status: "Success"
   });
 
-  const createOrder = async (orderData: any) => {
-    console.log(orderData);
+  // const createOrder = async (orderData: any) => {
+  //   console.log(orderData);
 
-    const response = await fetch("/api/order", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ orderData }),
-    });
+  //   const response = await fetch("/api/order", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({ orderData }),
+  //   });
 
-    const data = await response.json();
+  //   const data = await response.json();
 
-    if (!data?.order?.success) {
-      console.error("Failed to create order");
-      return;
-    }
+  //   if (!data?.order?.success) {
+  //     console.error("Failed to create order");
+  //     return;
+  //   }
 
-    alert("Order Succesfully Created");
-    localStorage.removeItem("order-data");
-    localStorage.setItem("payment", "Successful");
-  };
+  //   alert("Order Succesfully Created");
+  //   localStorage.removeItem("order-data");
+  //   localStorage.setItem("payment", "Successful");
+  // };
 
   useEffect(() => {
     const txnId = searchParams.get("transactionId") || "TXN123456789";
     const amount = searchParams.get("amount") || "199";
-    const providerId = searchParams.get("providerReferenceId") || "";
     const currentDate = new Date();
 
     setTransactionDetails({
@@ -67,8 +65,7 @@ const SuccessPage = () => {
         minute: "2-digit",
         hour12: true,
       }),
-      referenceId: providerId,
-      status: "Success",
+      status: "Success"
     });
 
     const userString = localStorage.getItem("Credentials");
@@ -95,15 +92,33 @@ const SuccessPage = () => {
       selectedDate: order_data.selectedDate || "",
       selectedTime: order_data.selectedTime || "",
       total: order_data.totalAmount || order_data.amount || 0,
-      txn_id: txnId,
-      ref_id: providerId,
+      txn_id: txnId
     };
-
     createOrder(orderData);
   }, [searchParams]);
 
   const handleDownloadReceipt = () => {
-    alert("Receipt download functionality would be implemented here");
+    const receiptHtml = `
+      <html><head><title>Receipt</title></head><body style='font-family:sans-serif;padding:24px;'>
+      <h2 style='color:#28a745;'>Payment Receipt</h2>
+      <p><b>Transaction ID:</b> ${transactionDetails.txnId}</p>
+      <p><b>Date:</b> ${transactionDetails.date}</p>
+      <p><b>Time:</b> ${transactionDetails.time}</p>
+      <p><b>Status:</b> ${transactionDetails.status}</p>
+      <p><b>Amount Paid:</b> ₹${transactionDetails.amount}</p>
+      <hr/>
+      <p>Thank you for booking with TheSuperChefs!</p>
+      </body></html>
+    `;
+    const blob = new Blob([receiptHtml], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `Receipt_${transactionDetails.txnId}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
   };
 
   const handleGoHome = () => {
@@ -179,18 +194,6 @@ const SuccessPage = () => {
                     <span className={styles.detailLabel}>Time</span>
                     <span className={styles.detailValue}>
                       {transactionDetails.time}
-                    </span>
-                  </div>
-                </div>
-
-                <div className={styles.detailItem}>
-                  <div className={styles.detailIcon}>
-                    <CreditCard size={20} />
-                  </div>
-                  <div className={styles.detailInfo}>
-                    <span className={styles.detailLabel}>Reference ID</span>
-                    <span className={styles.detailValue}>
-                      {transactionDetails.referenceId}
                     </span>
                   </div>
                 </div>

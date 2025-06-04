@@ -22,8 +22,7 @@ const FailurePage = () => {
     date: "",
     time: "",
     status: "Failed",
-    errorMessage: "",
-    referenceId: "",
+    errorMessage: ""
   });
 
   useEffect(() => {
@@ -32,7 +31,6 @@ const FailurePage = () => {
     const amount = searchParams.get("amount") || "199";
     const error = searchParams.get("error") || "Payment failed";
     const currentDate = new Date();
-    const referenceId = searchParams.get("providerReferenceId") || "";
 
     setTransactionDetails({
       txnId,
@@ -48,8 +46,7 @@ const FailurePage = () => {
         hour12: true,
       }),
       status: "Failed",
-      errorMessage: error,
-      referenceId,
+      errorMessage: error
     });
   }, [searchParams]);
 
@@ -108,18 +105,6 @@ const FailurePage = () => {
                     <span className={styles.detailLabel}>Transaction ID</span>
                     <span className={styles.detailValue}>
                       {transactionDetails.txnId}
-                    </span>
-                  </div>
-                </div>
-
-                <div className={styles.detailItem}>
-                  <div className={styles.detailIcon}>
-                    <CreditCard size={20} />
-                  </div>
-                  <div className={styles.detailInfo}>
-                    <span className={styles.detailLabel}>Reference ID</span>
-                    <span className={styles.detailValue}>
-                      {transactionDetails.referenceId}
                     </span>
                   </div>
                 </div>
