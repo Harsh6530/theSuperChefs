@@ -24,29 +24,6 @@ const SuccessPage = () => {
     status: "Success"
   });
 
-  // const createOrder = async (orderData: any) => {
-  //   console.log(orderData);
-
-  //   const response = await fetch("/api/order", {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({ orderData }),
-  //   });
-
-  //   const data = await response.json();
-
-  //   if (!data?.order?.success) {
-  //     console.error("Failed to create order");
-  //     return;
-  //   }
-
-  //   alert("Order Succesfully Created");
-  //   localStorage.removeItem("order-data");
-  //   localStorage.setItem("payment", "Successful");
-  // };
-
   useEffect(() => {
     const txnId = searchParams.get("transactionId") || "TXN123456789";
     const amount = searchParams.get("amount") || "199";
@@ -67,66 +44,18 @@ const SuccessPage = () => {
       }),
       status: "Success"
     });
-
-    const userString = localStorage.getItem("Credentials");
-    const orderDataString = localStorage.getItem("order-data");
-    const user = userString ? JSON.parse(userString) : null;
-    const order_data = orderDataString ? JSON.parse(orderDataString) : null;
-
-    const orderData = {
-      user: user.name,
-      mobile: user.mobile,
-      date: order_data.date,
-      time: order_data.time,
-      members: {
-        adults: order_data.guestsData?.adults ?? order_data.guests?.adults ?? 0,
-        children: order_data.guestsData?.children ?? order_data.guests?.children ?? 0,
-      },
-      items: order_data.items_data || order_data.selectedItems || [],
-      city: order_data.city || "",
-      address: order_data.address || "",
-      remarks: order_data.remarks || "",
-      coupon: order_data.coupon || "",
-      waiterCount: order_data.waiterCount || 0,
-      bartenderCount: order_data.bartenderCount || 0,
-      selectedDate: order_data.selectedDate || "",
-      selectedTime: order_data.selectedTime || "",
-      total: order_data.totalAmount || order_data.amount || 0,
-      txn_id: txnId
-    };
-    createOrder(orderData);
   }, [searchParams]);
-
-  const handleDownloadReceipt = () => {
-    const receiptHtml = `
-      <html><head><title>Receipt</title></head><body style='font-family:sans-serif;padding:24px;'>
-      <h2 style='color:#28a745;'>Payment Receipt</h2>
-      <p><b>Transaction ID:</b> ${transactionDetails.txnId}</p>
-      <p><b>Date:</b> ${transactionDetails.date}</p>
-      <p><b>Time:</b> ${transactionDetails.time}</p>
-      <p><b>Status:</b> ${transactionDetails.status}</p>
-      <p><b>Amount Paid:</b> ₹${transactionDetails.amount}</p>
-      <hr/>
-      <p>Thank you for booking with TheSuperChefs!</p>
-      </body></html>
-    `;
-    const blob = new Blob([receiptHtml], { type: 'text/html' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Receipt_${transactionDetails.txnId}.html`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  };
 
   const handleGoHome = () => {
     router.push("/");
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{
+      backgroundImage: "url('https://www.transparenttextures.com/patterns/food.png'), linear-gradient(135deg, #fff7ed 0%, #fffbe6 100%)",
+      backgroundRepeat: 'repeat',
+      backgroundSize: '300px 300px, cover',
+    }}>
       <div className={styles.wrapper}>
         <div className={styles.white_bg}>
           <div className={styles.content}>
@@ -224,13 +153,6 @@ const SuccessPage = () => {
 
             {/* Action Buttons */}
             <div className={styles.actionButtons}>
-              <button
-                className={styles.downloadButton}
-                onClick={handleDownloadReceipt}>
-                <Download size={20} />
-                Download Receipt
-              </button>
-
               <button
                 className={styles.homeButton}
                 onClick={handleGoHome}>

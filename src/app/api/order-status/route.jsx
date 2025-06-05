@@ -39,8 +39,8 @@ export async function GET(req) {
     );
 
     return NextResponse.json({
-      status: response.state === "COMPLETED" ? "Order Confirmed" : 
-              response.state === "FAILED" ? "Order Failed" : "Order Pending",
+      status: response.state === "COMPLETED" ? "Payment Successful" : 
+              response.state === "FAILED" ? "Payment Failed" : "Payment Pending",
       orderId: response.orderId,
       amount: response.amount,
       paymentDetails: response.paymentDetails

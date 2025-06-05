@@ -106,7 +106,11 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedI
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(orderData),
+        body: JSON.stringify({
+          amount: BOOKING_FEE * 100, // in paise
+          merchantTransactionId: `MT${Date.now()}`,
+          orderData, // send the rest of your order data for your own records
+        }),
       });
 
       if (!response.ok) {
@@ -114,7 +118,7 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedI
       }
 
       const data = await response.json();
-      router.push(data.redirectUrl);
+      router.push(data.data.redirectUrl);
     } catch (error) {
       console.error('Payment error:', error);
       // Handle error appropriately

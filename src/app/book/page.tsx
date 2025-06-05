@@ -214,7 +214,11 @@ const Page = () => {
   const dateString = selectedDateObj ? `${selectedDateObj.day}, ${selectedDateObj.month} ${selectedDateObj.dateNum}` : "";
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{
+      backgroundImage: "url('https://www.transparenttextures.com/patterns/food.png'), linear-gradient(135deg, #fff7ed 0%, #fffbe6 100%)",
+      backgroundRepeat: 'repeat',
+      backgroundSize: '300px 300px, cover',
+    }}>
       <div className={styles.wrapper}>
         <div className={styles.white_bg}>
           <header className={styles.header}>
@@ -284,6 +288,19 @@ const Page = () => {
                   </p>
                   <ChevronDown size={20} />
                 </button>
+                <p style={{
+                  fontSize: 13,
+                  color: '#ff8c1a',
+                  margin: '8px 0 0 0',
+                  fontWeight: 500,
+                  background: 'rgba(255, 140, 26, 0.08)',
+                  borderRadius: 8,
+                  padding: '8px 12px',
+                  border: '1px solid #ffe0b2',
+                  maxWidth: '100%',
+                }}>
+                  Hassle-free cooking. Ingredient quantities and raw material details will be shared after booking.
+                </p>
               </div>
 
               <div className={styles.selection}>

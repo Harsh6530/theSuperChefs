@@ -68,7 +68,11 @@ const FailurePage = () => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{
+      backgroundImage: "url('https://www.transparenttextures.com/patterns/food.png'), linear-gradient(135deg, #fff7ed 0%, #fffbe6 100%)",
+      backgroundRepeat: 'repeat',
+      backgroundSize: '300px 300px, cover',
+    }}>
       <div className={styles.wrapper}>
         <div className={styles.white_bg}>
           <div className={styles.content}>

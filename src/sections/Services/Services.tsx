@@ -38,13 +38,13 @@ export default function Services() {
             </div>
           </div>
           <div className={styles.cardBody}>
-            <ul>
+            <ul className={styles.featureList}>
               <li>Multi-cuisine expertise</li>
               <li>Fresh, hygienic, and flavorful meals</li>
               <li>Hassle-free cooking & serving</li>
               <li>Bartenders, Waiters, etc.</li>
             </ul>
-            <div>
+            <div className={styles.description}>
               Reserve your chef today for a truly memorable celebration.
             </div>
             <div className={styles.price}>
@@ -70,13 +70,13 @@ export default function Services() {
             </div>
           </div>
           <div className={styles.cardBody}>
-            <ul>
+            <ul className={styles.featureList}>
               <li>Customized Gourmet Menus</li>
               <li>Fresh & High-Quality Ingredients</li>
               <li>Professional Presentation</li>
               <li>Hassle-Free Service</li>
             </ul>
-            <div>Book now and let us serve perfection on your plate.</div>
+            <div className={styles.description}>Book now and let us serve perfection on your plate.</div>
             <div className={styles.price}>
               <small>Starting from</small>
               <strong> ₹699</strong>/person
@@ -100,13 +100,13 @@ export default function Services() {
             </div>
           </div>
           <div className={styles.cardBody}>
-            <ul>
+            <ul className={styles.featureList}>
               <li>Expert Mixology</li>
               <li>Excellent Communication</li>
               <li>Fast & Efficient</li>
               <li>Bartender kit carried along</li>
             </ul>
-            <div>Book a Bartender & Experience Mixology Perfection</div>
+            <div className={styles.description}>Book a Bartender & Experience Mixology Perfection</div>
             <div className={styles.price}>
               <small>Starting from</small>
               <strong> ₹1199</strong>/visit
