@@ -32,7 +32,7 @@ export async function POST(req) {
       process.env.NEXT_API_MERCHANT_ID,
       process.env.NEXT_API_MERCHANT_KEY,
       parseInt(process.env.NEXT_API_MERCHANT_VERSION || "1"),
-      Env.SANDBOX // or Env.PRODUCTION as needed
+      Env.PRODUCTION // Use production environment
     );
 
     try {
