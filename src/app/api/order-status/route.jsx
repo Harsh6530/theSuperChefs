@@ -20,7 +20,7 @@ export async function GET(req) {
       process.env.NEXT_API_MERCHANT_ID,
       process.env.NEXT_API_MERCHANT_KEY,
       parseInt(process.env.NEXT_API_MERCHANT_VERSION || "1"),
-      Env.SANDBOX // Change to Env.PRODUCTION for production
+      Env.PRODUCTION // Use production environment
     );
 
     // Get order status from PhonePe

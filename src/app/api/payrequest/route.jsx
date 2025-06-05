@@ -34,7 +34,7 @@ export async function POST(req) {
       process.env.NEXT_API_MERCHANT_ID,
       process.env.NEXT_API_MERCHANT_KEY,
       parseInt(process.env.NEXT_API_MERCHANT_VERSION || "1"),
-      Env.SANDBOX // Always use production environment
+      Env.PRODUCTION // Use production environment
     );
 
     // Get the base URL from environment or default to production URL
