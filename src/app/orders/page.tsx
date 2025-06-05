@@ -15,8 +15,10 @@ import {
 const OrdersPage = () => {
   const router = useRouter();
   type Order = {
-    _id: string;
+    id: string | number;
     status: string;
+    total: number;
+    paidAmount: number;
     date: string;
     time: string;
     members: {
@@ -25,12 +27,12 @@ const OrdersPage = () => {
     };
     address: string;
     items: { name: string }[];
-    ref_id: string;
     txn_id: string;
-    total: number;
+    [key: string]: any;
   };
 
   const [ordersData, setOrdersData] = useState<Order[]>([]);
+  const [expandedOrder, setExpandedOrder] = useState<string | number | null>(null);
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -73,7 +75,7 @@ const OrdersPage = () => {
     }
   };
 
-  const handleOrderClick = (orderId: string) => {
+  const handleOrderClick = (orderId: string | number) => {
     router.push(`/orders/${orderId}`);
   };
 
@@ -113,30 +115,39 @@ const OrdersPage = () => {
               <div className={styles.ordersList}>
                 {ordersData.map((order) => (
                   <div
-                    key={order._id}
+                    key={order.txn_id}
                     className={styles.orderCard}
-                    onClick={() => handleOrderClick(order._id)}>
+                    onClick={() => handleOrderClick(order.id)}>
+                    {/* Show txn_id at the top */}
+                    <div className={styles.orderNumber}>TXN: {order.txn_id}</div>
                     {/* Order Header */}
                     <div className={styles.orderHeader}>
                       <div className={styles.orderInfo}>
-                        <h3>Order #{order._id}</h3>
                         <span
-                          className={`${styles.status} ${getStatusColor(
-                            order.status
-                          )}`}>
-                          {order.status}
+                          className={
+                            order.status.toLowerCase() === 'pending'
+                              ? styles.statusPending
+                            : order.status.toLowerCase() === 'failed'
+                              ? styles.statusFailed
+                              : styles.statusPlaced
+                          }
+                        >
+                          {order.status.toLowerCase() === 'pending'
+                            ? 'PENDING'
+                            : order.status.toLowerCase() === 'failed'
+                            ? 'ORDER FAILED'
+                            : 'ORDER PLACED'}
                         </span>
                       </div>
                       <div className={styles.orderAmount}>
                         <span className={styles.totalAmount}>
                           ₹{order.total}
                         </span>
-                        <span className={styles.paidAmount}>
-                          Paid: ₹{199}
+                        <span className={styles.paidAmount} style={{ color: '#333' }}>
+                          Paid: ₹{order.paidAmount ?? 199}
                         </span>
                       </div>
                     </div>
-
                     {/* Order Details */}
                     <div className={styles.orderDetails}>
                       <div className={styles.detailRow}>
@@ -145,38 +156,27 @@ const OrdersPage = () => {
                           {order.date} at {order.time}
                         </span>
                       </div>
-
                       <div className={styles.detailRow}>
                         <Users size={16} />
                         <span>
                           {order.members.adults} Adults
-                          {order.members.children > 0 &&
-                            `, ${order.members.children} Children`}
+                          {order.members.children > 0 && `, ${order.members.children} Children`}
                         </span>
                       </div>
                     </div>
-
                     {/* Items Preview */}
-                    <div className={styles.itemsPreview}>
+                    {/* <div className={styles.itemsPreview}>
                       <span className={styles.itemsLabel}>Items:</span>
                       <span className={styles.itemsList}>
                         {order.items.slice(0, 3).map((item, index) => (
-                          <span key={index}>
+                          <span key={item.name + index}>
                             {item.name}
-                            {index < Math.min(order.items.length, 3) - 1 &&
-                              ", "}
+                            {index < Math.min(order.items.length, 3) - 1 && ', '}
                           </span>
                         ))}
-                        {order.items.length > 3 &&
-                          ` +${order.items.length - 3} more`}
+                        {order.items.length > 3 && ` +${order.items.length - 3} more`}
                       </span>
-                    </div>
-
-                    {/* Transaction Info */}
-                    <div className={styles.transactionInfo}>
-                      <span>Ref: {order.ref_id}</span>
-                      <span>TXN: {order.txn_id}</span>
-                    </div>
+                    </div> */}
                   </div>
                 ))}
               </div>

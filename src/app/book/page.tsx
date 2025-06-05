@@ -11,26 +11,21 @@ import { ArrowLeft, ChevronDown, Clock } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { checkAuth } from "../../../redux/auth/authSlice";
+import { dataContext } from "../context/dataContext";
+import { useContext } from "react";
 import WaiterBartenderPopup from "./components/WaiterBartenderPopup";
 import CouponPopup from "./components/CouponPopup";
 import AddressPopup from "./components/AddressPopup";
 import {
-  setGuests,
-  setSelectedItems,
-  setCity,
-  setAddress,
-  setRemarks,
-  setCoupon,
-  setWaiterCount,
-  setBartenderCount,
-  setSelectedDate,
-  setSelectedTime,
+  setGuests, setSelectedItems, setCity, setAddress, setRemarks, setCoupon,
+  setWaiterCount, setBartenderCount, setSelectedDate, setSelectedTime
 } from "../../../redux/booking/bookingSlice";
 import React from "react";
 
 const Page = () => {
   const router = useRouter();
   const dispatch = useDispatch();
+  const { totalData, setTotalData, dateTime, setDateTime, itemsData } = useContext(dataContext);
 
   interface RootState {
     auth: {
@@ -47,22 +42,6 @@ const Page = () => {
 
   useEffect(() => {
     dispatch(checkAuth());
-    // Preload booking data from localStorage
-    const bookingDataString = localStorage.getItem("order-data");
-    if (bookingDataString) {
-      const bookingData = JSON.parse(bookingDataString);
-      if (bookingData.guests) dispatch(setGuests(bookingData.guests) as any);
-      if (bookingData.selectedItems) dispatch(setSelectedItems(bookingData.selectedItems) as any);
-      if (bookingData.city) dispatch(setCity(bookingData.city) as any);
-      if (bookingData.address) dispatch(setAddress(bookingData.address) as any);
-      if (bookingData.remarks) dispatch(setRemarks(bookingData.remarks) as any);
-      if (bookingData.coupon) dispatch(setCoupon(bookingData.coupon) as any);
-      if (typeof bookingData.waiterCount === 'number') dispatch(setWaiterCount(bookingData.waiterCount) as any);
-      if (typeof bookingData.bartenderCount === 'number') dispatch(setBartenderCount(bookingData.bartenderCount) as any);
-      if (typeof bookingData.selectedDate === 'number') dispatch(setSelectedDate(bookingData.selectedDate) as any);
-      if (bookingData.selectedTime) dispatch(setSelectedTime(bookingData.selectedTime) as any);
-      if (bookingData.landmark) dispatch(setLandmark(bookingData.landmark) as any);
-    }
   }, [dispatch]);
 
   const currentDate = new Date();
@@ -85,19 +64,19 @@ const Page = () => {
   });
 
   const [popup, setPopup] = useState("");
+  const [selectedDate, setSelectedDateLocal] = useState(0);
+  const selectedTime = useSelector((state: RootState) => state.booking.selectedTime);
+  const [guests, setGuests] = useState({ adults: 0, children: 0 });
+  const [selectedItems, setSelectedItems] = useState<MenuItem[]>([]);
 
-  const {
-    guests,
-    selectedItems,
-    city,
-    address,
-    remarks,
-    coupon,
-    waiterCount,
-    bartenderCount,
-    selectedDate,
-    selectedTime,
-  } = useSelector((state: RootState) => state.booking);
+  // Update selectedItems when itemsData changes
+  useEffect(() => {
+    if (itemsData) {
+      setSelectedItems(itemsData);
+    }
+  }, [itemsData]);
+
+  const totalGuests = guests.adults + guests.children;
 
   interface MenuItem {
     _id: string;
@@ -135,12 +114,12 @@ const Page = () => {
 
   // Deduplicate selectedItems by _id
   const uniqueSelectedItems = Array.from(
-    new Map(selectedItems.map((item) => [item._id, item])).values()
+    new Map(selectedItems.map(item => [item._id, item])).values()
   );
 
   // Calculate course totals
   const courseCounts: Record<string, number> = {};
-  uniqueSelectedItems.forEach((item) => {
+  uniqueSelectedItems.forEach(item => {
     // Normalize the course name
     const course = COURSE_LABELS[item.Course_Type] || item.Course_Type;
     courseCounts[course] = (courseCounts[course] || 0) + 1;
@@ -154,8 +133,7 @@ const Page = () => {
   });
 
   // Calculate guests total
-  const guestsTotal =
-    guests.adults * ADULT_PRICE + guests.children * CHILD_PRICE;
+  const guestsTotal = guests.adults * ADULT_PRICE + guests.children * CHILD_PRICE;
 
   const user = useSelector((state: RootState) => state.auth.user);
 
@@ -171,49 +149,43 @@ const Page = () => {
   }
 
   const selectDate = (index: number) => {
-    dispatch(setSelectedDate(dates[index]));
+    setSelectedDateLocal(index);
+    dispatch(setSelectedDate(index));
+    setDateTime({ ...dateTime, date: dates[index] });
   };
 
-  const CITIES = [
-    "Delhi",
-    "Mumbai",
-    "Bangalore",
-    "Noida",
-    "Gurgaon",
-    "Ghaziabad",
-    "Faridabad",
-    "Gr Noida",
-  ];
+  const CITIES = ["Delhi", "Mumbai", "Bangalore", "Noida","Gurgaon","Ghaziabad", "Faridabad", "Gr Noida"];
   const WAITER_PRICE = 1500;
   const BARTENDER_PRICE = 2000;
+
+  const [city, setCity] = useState("");
+  const [waiterCount, setWaiterCount] = useState(0);
+  const [bartenderCount, setBartenderCount] = useState(0);
+  const [coupon, setCoupon] = useState("");
 
   // Add waiter and bartender total
   const waiterTotal = waiterCount * WAITER_PRICE;
   const bartenderTotal = bartenderCount * BARTENDER_PRICE;
   // Calculate final total (excluding booking fee)
-  const somethingSelected = guestsTotal > 0 || uniqueSelectedItems.length > 0;
-  const totalAmount = somethingSelected
-    ? BASE_PRICE + guestsTotal + itemsTotal + waiterTotal + bartenderTotal
-    : 0;
+  const somethingSelected = totalGuests > 0 || uniqueSelectedItems.length > 0;
+  const totalAmount = somethingSelected ? BASE_PRICE + guestsTotal + itemsTotal + waiterTotal + bartenderTotal : 0;
 
   // Calculate discount if coupon is applied
   const COUPON_CODE = "WELCOME15";
   const COUPON_DISCOUNT = 0.15;
   const isCouponApplied = coupon === COUPON_CODE;
-  const discountAmount = isCouponApplied
-    ? Math.round(totalAmount * COUPON_DISCOUNT)
-    : 0;
-  const discountedTotal = isCouponApplied
-    ? totalAmount - discountAmount
-    : totalAmount;
+  const discountAmount = isCouponApplied ? Math.round(totalAmount * COUPON_DISCOUNT) : 0;
+  const discountedTotal = isCouponApplied ? totalAmount - discountAmount : totalAmount;
 
+  const [address, setAddress] = useState("");
+  const [remarks, setRemarks] = useState("");
   const [showDetails, setShowDetails] = useState(false);
 
   const validator = () => {
     if (
       selectedDate === null ||
       selectedTime === "" ||
-      guestsTotal === 0 ||
+      totalGuests === 0 ||
       selectedItems.length === 0 ||
       !city
     ) {
@@ -222,6 +194,10 @@ const Page = () => {
     }
     setPopup("address");
   };
+
+  useEffect(() => {
+    setDateTime({ ...dateTime, date: dates[0] });
+  }, []);
 
   const booking = useSelector((state: RootState) => state.booking);
 
@@ -233,10 +209,16 @@ const Page = () => {
     }
   }, [showDetails, booking.address, booking.remarks]);
 
-  console.log(selectedItems);
+  // Construct date string for DetailsPopup
+  const selectedDateObj = dates[selectedDate];
+  const dateString = selectedDateObj ? `${selectedDateObj.day}, ${selectedDateObj.month} ${selectedDateObj.dateNum}` : "";
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container} style={{
+      backgroundImage: "url('https://www.transparenttextures.com/patterns/food.png'), linear-gradient(135deg, #fff7ed 0%, #fffbe6 100%)",
+      backgroundRepeat: 'repeat',
+      backgroundSize: '300px 300px, cover',
+    }}>
       <div className={styles.wrapper}>
         <div className={styles.white_bg}>
           <header className={styles.header}>
@@ -255,10 +237,7 @@ const Page = () => {
                 {dates.map((elem, index) => (
                   <li
                     className={`${styles.date_element} ${
-                      JSON.stringify(selectedDate) ===
-                      JSON.stringify(dates[index])
-                        ? styles.selected
-                        : ""
+                      selectedDate === index ? styles.selected : ""
                     }`}
                     key={index}
                     onClick={() => {
@@ -289,7 +268,7 @@ const Page = () => {
                   className={styles.selector}
                   onClick={() => setPopup("members")}>
                   <p>
-                    {guestsTotal > 0
+                    {totalGuests > 0
                       ? `${guests.adults} Adults, ${guests.children} Children`
                       : "Select Members"}
                   </p>
@@ -309,31 +288,32 @@ const Page = () => {
                   </p>
                   <ChevronDown size={20} />
                 </button>
+                <p style={{
+                  fontSize: 13,
+                  color: '#ff8c1a',
+                  margin: '8px 0 0 0',
+                  fontWeight: 500,
+                  background: 'rgba(255, 140, 26, 0.08)',
+                  borderRadius: 8,
+                  padding: '8px 12px',
+                  border: '1px solid #ffe0b2',
+                  maxWidth: '100%',
+                }}>
+                  Hassle-free cooking. Ingredient quantities and raw material details will be shared after booking.
+                </p>
               </div>
 
               <div className={styles.selection}>
                 <label>City</label>
-                <select
-                  name="city"
+                <button
                   className={styles.selector}
-                  value={city}
-                  onChange={(e) => {
-                    const selectedCity = e.target.value;
-                    dispatch(setCity(selectedCity));
-                  }}>
-                  <option
-                    value=""
-                    disabled>
-                    Select a city
-                  </option>
-                  {CITIES.map((city, index) => (
-                    <option
-                      key={index}
-                      value={city}>
-                      {city}
-                    </option>
-                  ))}
-                </select>
+                  type="button"
+                  onClick={() => setPopup("city")}
+                  style={{ justifyContent: "space-between" }}
+                >
+                  <span>{city ? city : "Select City"}</span>
+                  <ChevronDown size={20} />
+                </button>
               </div>
 
               <div className={styles.selection}>
@@ -342,14 +322,11 @@ const Page = () => {
                   className={styles.selector}
                   type="button"
                   onClick={() => setPopup("waiterbartender")}
-                  style={{ justifyContent: "space-between" }}>
+                  style={{ justifyContent: "space-between" }}
+                >
                   <span>
                     {waiterCount > 0 || bartenderCount > 0
-                      ? `${waiterCount} Waiter${
-                          waiterCount !== 1 ? "s" : ""
-                        }, ${bartenderCount} Bartender${
-                          bartenderCount !== 1 ? "s" : ""
-                        }`
+                      ? `${waiterCount} Waiter${waiterCount !== 1 ? "s" : ""}, ${bartenderCount} Bartender${bartenderCount !== 1 ? "s" : ""}`
                       : "Select Waiters & Bartenders"}
                   </span>
                   <ChevronDown size={20} />
@@ -359,33 +336,24 @@ const Page = () => {
               <div className={styles.selection}>
                 <label>Coupon</label>
                 {coupon ? (
-                  <div
-                    style={{
-                      background:
-                        "linear-gradient(90deg, #ff9800 0%, #ff4d4f 100%)",
-                      color: "#fff",
-                      borderRadius: "8px",
-                      padding: "10px 18px",
-                      fontWeight: 700,
-                      fontSize: "1.1rem",
-                      letterSpacing: 2,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      marginBottom: 8,
-                      width: "100%",
-                      boxSizing: "border-box",
-                      minHeight: 44,
-                      gap: 8,
-                    }}>
-                    <span
-                      style={{
-                        overflow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                      }}>
-                      {coupon}
-                    </span>
+                  <div style={{
+                    background: "linear-gradient(90deg, #ff9800 0%, #ff4d4f 100%)",
+                    color: "#fff",
+                    borderRadius: "8px",
+                    padding: "10px 18px",
+                    fontWeight: 700,
+                    fontSize: "1.1rem",
+                    letterSpacing: 2,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    marginBottom: 8,
+                    width: "100%",
+                    boxSizing: "border-box",
+                    minHeight: 44,
+                    gap: 8
+                  }}>
+                    <span style={{overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>{coupon}</span>
                     <button
                       style={{
                         background: "#fff",
@@ -396,9 +364,10 @@ const Page = () => {
                         fontSize: 12,
                         padding: "2px 12px",
                         cursor: "pointer",
-                        marginLeft: 12,
+                        marginLeft: 12
                       }}
-                      onClick={() => setCoupon("")}>
+                      onClick={() => setCoupon("")}
+                    >
                       Remove
                     </button>
                   </div>
@@ -407,10 +376,8 @@ const Page = () => {
                   className={styles.selector}
                   type="button"
                   onClick={() => setPopup("coupon")}
-                  style={{
-                    justifyContent: "space-between",
-                    marginTop: coupon ? 8 : 0,
-                  }}>
+                  style={{ justifyContent: "space-between", marginTop: coupon ? 8 : 0 }}
+                >
                   <span>{coupon ? "Change Coupon" : "Apply Coupon"}</span>
                   <ChevronDown size={20} />
                 </button>
@@ -425,31 +392,13 @@ const Page = () => {
                   {isCouponApplied ? (
                     <>
                       <p className={styles.amount}>
-                        <span
-                          style={{
-                            textDecoration: "line-through",
-                            color: "#888",
-                            fontWeight: 400,
-                            fontSize: "1.1rem",
-                            marginRight: 8,
-                          }}>
+                        <span style={{ textDecoration: "line-through", color: "#888", fontWeight: 400, fontSize: "1.1rem", marginRight: 8 }}>
                           ₹ {totalAmount}
                         </span>
-                        <span
-                          style={{
-                            color: "#ff4d4f",
-                            fontWeight: 700,
-                            fontSize: "1.3rem",
-                          }}>
-                          ₹ {discountedTotal}
-                        </span>
+                        <span style={{ color: "#ff4d4f", fontWeight: 700, fontSize: "1.3rem" }}>₹ {discountedTotal}</span>
                       </p>
                       <p className={styles.payableText}>
-                        You save{" "}
-                        <span style={{ color: "#ff9800", fontWeight: 700 }}>
-                          ₹ {discountAmount}
-                        </span>{" "}
-                        with coupon!
+                        You save <span style={{ color: "#ff9800", fontWeight: 700 }}>₹ {discountAmount}</span> with coupon!
                       </p>
                     </>
                   ) : (
@@ -464,7 +413,8 @@ const Page = () => {
             <button
               className={styles.continueButton}
               onClick={() => validator()}
-              disabled={!somethingSelected}>
+              disabled={!somethingSelected}
+            >
               Proceed
             </button>
           </footer>
@@ -473,24 +423,20 @@ const Page = () => {
             <MembersPopup
               setPopup={setPopup}
               guests={guests}
-              setGuests={(guests) => dispatch(setGuests(guests))}
+              setGuests={setGuests}
             />
           )}
 
           {popup === "items" && (
             <ItemsPopup
               setPopup={setPopup}
-              selectedItems={selectedItems}
-              onItemsSelected={(items) => dispatch(setSelectedItems(items))}
+              selectedItems={selectedItems as any}
+              onItemsSelected={setSelectedItems as any}
             />
           )}
 
           {popup === "time" && (
-            <TimePopup
-              setPopup={setPopup}
-              selectedTime={selectedTime}
-              setSelectedTime={(time) => dispatch(setSelectedTime(time))}
-            />
+            <TimePopup setPopup={setPopup} />
           )}
 
           {popup === "address" && (
@@ -504,8 +450,8 @@ const Page = () => {
             <DetailsPopup
               setPopup={() => setShowDetails(false)}
               guests={guests}
-              selectedItems={uniqueSelectedItems}
-              totalAmount={discountedTotal}
+              selectedItems={selectedItems}
+              totalAmount={totalAmount}
               courseCounts={courseCounts}
               guestsTotal={guestsTotal}
               itemsTotal={itemsTotal}
@@ -518,6 +464,8 @@ const Page = () => {
               coupon={coupon}
               address={address}
               remarks={remarks}
+              date={dateString}
+              time={selectedTime}
             />
           )}
 
@@ -534,9 +482,9 @@ const Page = () => {
             <WaiterBartenderPopup
               setPopup={setPopup}
               waiterCount={waiterCount}
-              setWaiterCount={(count) => dispatch(setWaiterCount(count))}
+              setWaiterCount={setWaiterCount}
               bartenderCount={bartenderCount}
-              setBartenderCount={(count) => dispatch(setBartenderCount(count))}
+              setBartenderCount={setBartenderCount}
               WAITER_PRICE={WAITER_PRICE}
               BARTENDER_PRICE={BARTENDER_PRICE}
             />
@@ -546,7 +494,7 @@ const Page = () => {
             <CouponPopup
               setPopup={setPopup}
               coupon={coupon}
-              setCoupon={(coupon) => dispatch(setCoupon(coupon))}
+              setCoupon={setCoupon}
             />
           )}
         </div>

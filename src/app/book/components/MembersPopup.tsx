@@ -3,6 +3,8 @@
 import type React from "react";
 import styles from "../styles/popup.module.css";
 import { X, Minus, Plus } from "lucide-react";
+import { useContext } from "react";
+import { dataContext } from "@/app/context/dataContext";
 
 interface MembersPopupProps {
   setPopup: (value: string) => void;
@@ -15,14 +17,15 @@ const MembersPopup: React.FC<MembersPopupProps> = ({
   guests,
   setGuests,
 }) => {
+  const { setGuestsData, guestsData } = useContext(dataContext);
 
   const handleIncrement = (type: "adults" | "children") => {
     setGuests({
       ...guests,
       [type]: guests[type] + 1,
     });
-    setGuests({
-      ...guests,
+    setGuestsData({
+      ...guestsData,
       [type]:guests[type]+1
     })
   };
@@ -34,8 +37,8 @@ const MembersPopup: React.FC<MembersPopupProps> = ({
         [type]: guests[type] - 1,
       });
     }
-    setGuests({
-      ...guests,
+    setGuestsData({
+      ...guestsData,
       [type]:guests[type]-1
     })
   };

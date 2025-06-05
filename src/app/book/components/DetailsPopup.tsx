@@ -31,6 +31,8 @@ interface DetailsPopupProps {
   coupon: string
   address: string
   remarks: string
+  date: string
+  time: string
 }
 
 const COURSE_PRICES: Record<string, number> = {
@@ -42,9 +44,21 @@ const COURSE_PRICES: Record<string, number> = {
   Beverages: 149,
 }
 
+const COURSE_LABELS: Record<string, string> = {
+  Soups: "Soups",
+  Starter: "Starters",
+  Starters: "Starters",
+  Mains: "Main Course",
+  "Main Course": "Main Course",
+  Sides: "Sides",
+  Desserts: "Desserts",
+  Dessert: "Desserts",
+  Beverages: "Beverages",
+}
+
 const BOOKING_FEE = 199;
 
-const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedItems, totalAmount, courseCounts, guestsTotal, itemsTotal, BASE_PRICE, city, waiterCount, bartenderCount, waiterTotal, bartenderTotal, coupon, address, remarks }) => {
+const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedItems, totalAmount, courseCounts, guestsTotal, itemsTotal, BASE_PRICE, city, waiterCount, bartenderCount, waiterTotal, bartenderTotal, coupon, address, remarks, date, time }) => {
   const router = useRouter()
 
   // Calculate staff total and final total (mirroring page.tsx logic)
@@ -58,15 +72,19 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedI
 
   const handlePayment = async () => {
     try {
-      // Save booking data to localStorage for payment success page
-      const userString = localStorage.getItem("Credentials");
-      const user = userString ? JSON.parse(userString) : null;
       const orderData = {
-        user: user?.name || "",
-        mobile: user?.mobile || "",
         guests,
-        selectedItems,
-        totalAmount,
+        items: selectedItems.map(item => ({
+          _id: item._id,
+          Course_Type: item.Course_Type,
+          Classification: item.Classification,
+          Cuisine: item.Cuisine,
+          Dish_Name: item.Dish_Name,
+          Remarks: item.Remarks,
+          Price: COURSE_PRICES[COURSE_LABELS[item.Course_Type] || item.Course_Type] || 0
+        })),
+        selectedItems, // Keep this for backward compatibility
+        totalAmount: isCouponApplied ? discountedTotal : totalAmount,
         courseCounts,
         guestsTotal,
         itemsTotal,
@@ -79,28 +97,31 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedI
         coupon,
         address,
         remarks,
-        bookingFee: BOOKING_FEE,
-        paymentStatus: "pending",
+        date,
+        time
       };
-      localStorage.setItem("order-data", JSON.stringify(orderData));
-      // Initiate payment (redirect to gateway)
-      const response = await fetch("/api/payrequest", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+
+      const response = await fetch('/api/payrequest', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
-          merchantTransactionId: `MT${Date.now()}`,
           amount: BOOKING_FEE * 100, // in paise
+          merchantTransactionId: `MT${Date.now()}`,
+          orderData, // send the rest of your order data for your own records
         }),
       });
-      const data = await response.json();
-      if (data.data && data.data.redirectUrl) {
-        window.location.href = data.data.redirectUrl;
-      } else {
-        throw new Error("No redirect URL received");
+
+      if (!response.ok) {
+        throw new Error('Payment request failed');
       }
+
+      const data = await response.json();
+      router.push(data.data.redirectUrl);
     } catch (error) {
-      console.error("Error initiating payment:", error);
-      alert( (error as any).response?.data?.error || "Failed to initiate payment. Please try again.");
+      console.error('Payment error:', error);
+      // Handle error appropriately
     }
   };
 

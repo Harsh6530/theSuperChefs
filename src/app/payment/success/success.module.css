@@ -221,3 +221,38 @@
 .homeButton:hover {
   background-color: #5a6268;
 }
+
+@media (max-width: 600px) {
+  .wrapper {
+    max-width: 100vw;
+    min-height: unset;
+    border-radius: 0;
+    padding: 0;
+  }
+  .white_bg {
+    border-radius: 0;
+    padding: 0;
+  }
+  .content {
+    padding: 12px 4px 80px 4px;
+  }
+  .successMessage h1 {
+    font-size: 1.2rem;
+  }
+  .transactionDetails,
+  .bookingInfo {
+    padding: 10px;
+  }
+  .detailItem {
+    padding: 8px;
+    gap: 8px;
+  }
+  .detailIcon {
+    width: 28px;
+    height: 28px;
+  }
+  .actionButtons button {
+    padding: 10px 8px;
+    font-size: 0.95rem;
+  }
+}

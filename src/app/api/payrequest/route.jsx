@@ -9,9 +9,9 @@ export async function POST(req) {
     const data = await req.json();
     
     // Debug logging
-    console.log("Environment:", process.env.NODE_ENV);
-    console.log("PhonePe Client ID:", process.env.PHONEPE_CLIENT_ID);
-    console.log("PhonePe Client Secret:", process.env.PHONEPE_CLIENT_SECRET ? "Present" : "Missing");
+    // console.log("Environment:", process.env.NODE_ENV);
+    // console.log("PhonePe Client ID:", process.env.PHONEPE_CLIENT_ID);
+    // console.log("PhonePe Client Secret:", process.env.PHONEPE_CLIENT_SECRET ? "Present" : "Missing");
     
     // Validate required fields
     if (!data.amount || !data.merchantTransactionId) {
@@ -22,19 +22,19 @@ export async function POST(req) {
     }
 
     // Validate environment variables
-    if (!process.env.PHONEPE_CLIENT_ID || !process.env.PHONEPE_CLIENT_SECRET) {
-      return NextResponse.json(
-        { message: "Configuration Error", error: "Missing PhonePe credentials" },
-        { status: 500 }
-      );
-    }
+    // if (!process.env.PHONEPE_CLIENT_ID || !process.env.PHONEPE_CLIENT_SECRET) {
+    //   return NextResponse.json(
+    //     { message: "Configuration Error", error: "Missing PhonePe credentials" },
+    //     { status: 500 }
+    //   );
+    // }
 
-    // Initialize PhonePe client with PRODUCTION environment
+    // Initialize PhonePe client with production environment
     const client = StandardCheckoutClient.getInstance(
-      process.env.PHONEPE_CLIENT_ID,
-      process.env.PHONEPE_CLIENT_SECRET,
-      parseInt(process.env.PHONEPE_CLIENT_VERSION || "1"),
-      Env.PRODUCTION // Use PRODUCTION for live
+      process.env.NEXT_API_MERCHANT_ID,
+      process.env.NEXT_API_MERCHANT_KEY,
+      parseInt(process.env.NEXT_API_MERCHANT_VERSION || "1"),
+      Env.SANDBOX // Always use production environment
     );
 
     // Get the base URL from environment or default to production URL
@@ -44,14 +44,14 @@ export async function POST(req) {
     const request = StandardCheckoutPayRequest.builder()
       .merchantOrderId(data.merchantTransactionId)
       .amount(data.amount)
-      .redirectUrl(`${baseUrl}/payment/success?transactionId=${data.merchantTransactionId}`)
+      .redirectUrl(`${baseUrl}payment/status?transactionId=${data.merchantTransactionId}`)  // Pass transactionId in URL
       .build();
 
     // Debug logging
     console.log("Payment Request:", {
       merchantOrderId: data.merchantTransactionId,
       amount: data.amount,
-      redirectUrl: `${baseUrl}/payment/success?transactionId=${data.merchantTransactionId}`
+      redirectUrl: `${baseUrl}payment/status?transactionId=${data.merchantTransactionId}`
     });
 
     // Initiate payment

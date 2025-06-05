@@ -27,9 +27,11 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
   selectedItems,
   onItemsSelected,
 }) => {
+  const { itemsData, setItemsData } = useContext(dataContext);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selected, setSelected] = useState<MenuItem[]>(selectedItems || []);
   const [collapsed, setCollapsed] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
@@ -57,17 +59,32 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
   const categories = [...new Set(menuItems.map((item) => item.Course_Type))];
 
   const toggleItem = (item: MenuItem) => {
-    if (selectedItems.some((i) => i._id === item._id)) {
-      onItemsSelected(selectedItems.filter((i) => i._id !== item._id));
+    if (selected.some((i) => i._id === item._id)) {
+      const newSelected = selected.filter((i) => i._id !== item._id);
+      setSelected(newSelected);
+      setItemsData(newSelected);
     } else {
-      onItemsSelected([...selectedItems, item]);
+      const newSelected = [...selected, item];
+      setSelected(newSelected);
+      setItemsData(newSelected);
     }
   };
 
   const handleDone = () => {
-    onItemsSelected(selectedItems);
+    // Ensure we're using the latest selected items
+    const finalSelected = [...selected];
+    onItemsSelected(finalSelected);
+    setItemsData(finalSelected);
     setPopup("");
   };
+
+  // Update selected state when selectedItems prop changes
+  useEffect(() => {
+    if (selectedItems) {
+      setSelected(selectedItems);
+      setItemsData(selectedItems);
+    }
+  }, [selectedItems]);
 
   const COURSE_LABELS: Record<string, string> = {
     Soups: "Soups",
@@ -92,7 +109,7 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
 
   // Calculate course counts for footer summary
   const courseCounts: Record<string, number> = {};
-  selectedItems.forEach(item => {
+  selected.forEach(item => {
     const label = COURSE_LABELS[item.Course_Type] || item.Course_Type;
     courseCounts[label] = (courseCounts[label] || 0) + 1;
   });
@@ -104,9 +121,9 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
     <div className={`${styles.popup} ${styles.itemsPopup}`}>
       <div className={styles.popupHeader}>
         <h2>Select Items</h2>
-        <p style={{ fontSize: 13, color: '#666', margin: '6px 0 0 2px', fontWeight: 400 }}>
+        {/* <p style={{ fontSize: 13, color: '#666', margin: '6px 0 0 2px', fontWeight: 400 }}>
           Hassle-free cooking. Ingredient quantities and raw material details will be shared after booking.
-        </p>
+        </p> */}
         <button
           className={styles.closeButton}
           onClick={() => setPopup("")}>
@@ -180,12 +197,12 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
                       </div>
                       <div
                         className={`${styles.checkbox} ${
-                          selectedItems.some((i) => i._id === item._id)
+                          selected.some((i) => i._id === item._id)
                             ? styles.checked
                             : ""
                         }`}
                       >
-                        {selectedItems.some((i) => i._id === item._id) && <Check size={16} />}
+                        {selected.some((i) => i._id === item._id) && <Check size={16} />}
                       </div>
                     </div>
                   ))}
@@ -195,16 +212,24 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
         ))}
       </div>
       <div className={styles.popupFooter}>
-        <div className={styles.selectedCount}>
+        <div className={styles.selectedCount + ' ' + styles.selectedCountMobile}>
           <div>
             <span>Soups: {courseCounts["Soups"] || 0}</span>
-            <span style={{ marginLeft: 16 }}>Starters: {courseCounts["Starters"] || 0}</span>
-            <span style={{ marginLeft: 16 }}>Main Course: {courseCounts["Main Course"] || 0}</span>
+          </div>
+          <div>
+            <span>Starters: {courseCounts["Starters"] || 0}</span>
+          </div>
+          <div>
+            <span>Main Course: {courseCounts["Main Course"] || 0}</span>
           </div>
           <div>
             <span>Sides: {courseCounts["Sides"] || 0}</span>
-            <span style={{ marginLeft: 16 }}>Desserts: {courseCounts["Desserts"] || 0}</span>
-            <span style={{ marginLeft: 16 }}>Beverages: {courseCounts["Beverages"] || 0}</span>
+          </div>
+          <div>
+            <span>Desserts: {courseCounts["Desserts"] || 0}</span>
+          </div>
+          <div>
+            <span>Beverages: {courseCounts["Beverages"] || 0}</span>
           </div>
         </div>
         <button
