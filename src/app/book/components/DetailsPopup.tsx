@@ -72,35 +72,44 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedI
 
   const handlePayment = async () => {
     try {
+      const credentialsString = localStorage.getItem("Credentials");
+      const credentials = credentialsString ? JSON.parse(credentialsString) : {};
+      const merchantTransactionId = `MT${Date.now()}`;
       const orderData = {
-        guests,
-        items: selectedItems.map(item => ({
-          _id: item._id,
-          Course_Type: item.Course_Type,
-          Classification: item.Classification,
-          Cuisine: item.Cuisine,
-          Dish_Name: item.Dish_Name,
-          Remarks: item.Remarks,
-          Price: COURSE_PRICES[COURSE_LABELS[item.Course_Type] || item.Course_Type] || 0
+        user: credentials.name || "",
+        mobile: credentials.mobile || "",
+        date,
+        time,
+        status: "pending",
+        members: guests,
+        total: isCouponApplied ? discountedTotal : totalAmount,
+        items: selectedItems.map((item, idx) => ({
+          id: idx + 1,
+          name: item.Dish_Name,
+          price: COURSE_PRICES[COURSE_LABELS[item.Course_Type] || item.Course_Type] || 0,
+          category: COURSE_LABELS[item.Course_Type] || item.Course_Type,
         })),
-        selectedItems, // Keep this for backward compatibility
-        totalAmount: isCouponApplied ? discountedTotal : totalAmount,
-        courseCounts,
-        guestsTotal,
-        itemsTotal,
-        BASE_PRICE,
+        txn_id: merchantTransactionId,
         city,
         waiterCount,
         bartenderCount,
-        waiterTotal,
-        bartenderTotal,
         coupon,
+        createdAt: new Date().toISOString(),
         address,
         remarks,
-        date,
-        time
       };
 
+      // 1. Save order as pending
+      const orderRes = await fetch('/api/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(orderData),
+      });
+      if (!orderRes.ok) {
+        throw new Error('Failed to save order');
+      }
+
+      // 2. Initiate payment
       const response = await fetch('/api/payrequest', {
         method: 'POST',
         headers: {
@@ -108,7 +117,7 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedI
         },
         body: JSON.stringify({
           amount: BOOKING_FEE * 100, // in paise
-          merchantTransactionId: `MT${Date.now()}`,
+          merchantTransactionId,
           orderData, // send the rest of your order data for your own records
         }),
       });
