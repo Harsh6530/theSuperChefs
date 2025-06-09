@@ -20,10 +20,14 @@ export default function Footer() {
           <h3>The SuperChefs</h3>
           <hr />
           <p>
-            <span style={{ fontWeight: 600 }}>At The SuperChefs,</span> The SuperChefs brings expert chefs and premium catering 
-            services to your doorstep, making every event hassle-free. From initiate gatherings to grand celebrations, we serve fresh, 
-            restaurant-quality cuisine tailored to your taste. Currently serving Delhi, Noida, Gurgaon, Ghaziabad, Faridabad, and Bangalore.
-             Let us handle the food while you enjoy the moment!
+            <span style={{ fontWeight: 600 }}>At The SuperChefs,</span> our vision is to redefine at-home dining 
+            by bringing the luxury of fine dining into your own kitchen. We provide expert chefs who specialize in 
+            cuisines tailored to your preferences, using ingredients from your pantry to craft unforgettable meals 
+            for you and your loved ones. Whether it’s a birthday, anniversary, or an intimate gathering, we aim to 
+            turn every occasion into a lifelong memory. 
+            
+            {/* On-demand bartenders, waitstaff, and premium pre-cooked 
+            meals made with high-quality ingredients are also available to elevate your experience. */}
           </p>
         </div>
         {/* Useful Links */}

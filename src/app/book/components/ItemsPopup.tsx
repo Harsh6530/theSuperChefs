@@ -165,6 +165,15 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
               <div className={styles.itemsList}>
                 {menuItems
                   .filter((item) => item.Course_Type === category)
+                  .sort((a, b) => {
+                    // Veg first, then Non-Veg, then unclassified
+                    const getRank = (classification: string | undefined) => {
+                      if (classification === "Veg") return 0;
+                      if (classification === "Non-Veg") return 1;
+                      return 2; // undefined, null, '-', or any other
+                    };
+                    return getRank(a.Classification) - getRank(b.Classification);
+                  })
                   .map((item) => (
                     <div
                       key={item._id}

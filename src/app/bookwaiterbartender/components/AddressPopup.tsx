@@ -52,20 +52,24 @@ const AddressPopup: React.FC<AddressPopupProps> = ({ setPopup, setShowDetails, a
         <div style={{ marginBottom: 18, border: '1px solid #e0e0e0', borderRadius: 10, padding: 8, background: '#fff' }}>
           <input
             className={styles.selector}
-            style={{ width: '100%', fontSize: 16, border: 'none', boxShadow: 'none', background: 'transparent' }}
+            style={{ width: '100%', fontSize: 16, border: 'none', outline: 'none', boxShadow: 'none', background: 'transparent' }}
             value={house}
             onChange={e => setHouse(e.target.value)}
             placeholder="Flat 101, Green Apartments"
+            onFocus={e => e.currentTarget.parentElement && (e.currentTarget.parentElement.style.border = '2px solid #ff8c1a')}
+            onBlur={e => e.currentTarget.parentElement && (e.currentTarget.parentElement.style.border = '1px solid #e0e0e0')}
           />
         </div>
         <div style={{ marginBottom: 6, fontWeight: 600, fontSize: 15 }}>Road name, Area, Colony <span style={{color:'#ff4d4f'}}>*</span></div>
         <div style={{ marginBottom: 18, border: '1px solid #e0e0e0', borderRadius: 10, padding: 8, background: '#fff', position: 'relative' }}>
           <input
             className={styles.selector}
-            style={{ width: '100%', fontSize: 16, border: 'none', boxShadow: 'none', background: 'transparent', paddingRight: 36 }}
+            style={{ width: '100%', fontSize: 16, border: 'none', outline: 'none', boxShadow: 'none', background: 'transparent', paddingRight: 36 }}
             value={road}
             onChange={e => setRoad(e.target.value)}
             placeholder="MG Road, Indiranagar"
+            onFocus={e => e.currentTarget.parentElement && (e.currentTarget.parentElement.style.border = '2px solid #ff8c1a')}
+            onBlur={e => e.currentTarget.parentElement && (e.currentTarget.parentElement.style.border = '1px solid #e0e0e0')}
           />
         </div>
         {error && <div style={{ color: '#ff4d4f', marginBottom: 8 }}>{error}</div>}
@@ -73,10 +77,12 @@ const AddressPopup: React.FC<AddressPopupProps> = ({ setPopup, setShowDetails, a
         <div style={{ marginBottom: 12, border: '1px solid #e0e0e0', borderRadius: 10, padding: 8, background: '#fff' }}>
           <textarea
             className={styles.selector}
-            style={{ minHeight: 40, width: '100%', border: 'none', boxShadow: 'none', background: 'transparent' }}
+            style={{ minHeight: 40, width: '100%', border: 'none', outline: 'none', boxShadow: 'none', background: 'transparent' }}
             value={localRemarks}
             onChange={e => setLocalRemarks(e.target.value)}
             placeholder="Any remarks for the event (optional)"
+            onFocus={e => e.currentTarget.parentElement && (e.currentTarget.parentElement.style.border = '2px solid #ff8c1a')}
+            onBlur={e => e.currentTarget.parentElement && (e.currentTarget.parentElement.style.border = '1px solid #e0e0e0')}
           />
         </div>
       </div>
