@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://thesuperchefs.com/sitemap.xml 
