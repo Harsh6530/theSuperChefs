@@ -16,10 +16,10 @@ export default function OrderDetailsPage() {
   useEffect(() => {
     if (!orderId) return;
     setLoading(true);
-    fetch("/api/getOrderById", {
+    fetch("/api/getOrderByTxnId", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ id: orderId }),
+      body: JSON.stringify({ txn_id: orderId }),
     })
       .then(res => {
         if (!res.ok) throw new Error("Failed to fetch order");

@@ -28,6 +28,7 @@ const OrdersPage = () => {
     address: string;
     items: { name: string }[];
     txn_id: string;
+    createdAt: string;
     [key: string]: any;
   };
 
@@ -75,8 +76,8 @@ const OrdersPage = () => {
     }
   };
 
-  const handleOrderClick = (orderId: string | number) => {
-    router.push(`/orders/${orderId}`);
+  const handleOrderClick = (txnId: string) => {
+    router.push(`/orders/${txnId}`);
   };
 
   useEffect(() => {
@@ -111,13 +112,13 @@ const OrdersPage = () => {
                   Book Now
                 </button>
               </div>
-            ) : (
+            ) :
               <div className={styles.ordersList}>
-                {ordersData.map((order) => (
+                {[...ordersData].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()).map((order) => (
                   <div
                     key={order.txn_id}
                     className={styles.orderCard}
-                    onClick={() => handleOrderClick(order.id)}>
+                    onClick={() => handleOrderClick(order.txn_id)}>
                     {/* Show txn_id at the top */}
                     <div className={styles.orderNumber}>TXN: {order.txn_id}</div>
                     {/* Order Header */}
@@ -148,7 +149,7 @@ const OrdersPage = () => {
                         </span>
                       </div>
                     </div>
-                    {/* Order Details */}
+                    {/* Order Details - show all details neatly */}
                     <div className={styles.orderDetails}>
                       <div className={styles.detailRow}>
                         <Calendar size={16} />
@@ -163,24 +164,15 @@ const OrdersPage = () => {
                           {order.members.children > 0 && `, ${order.members.children} Children`}
                         </span>
                       </div>
+                      <div className={styles.detailRow}>
+                        <MapPin size={16} />
+                        <span style={{textAlign:'right', display:'block', whiteSpace:'pre-line', wordBreak:'break-word', maxWidth: 'min(60vw, 350px)', marginLeft: 'auto'}}>{order.address?.replace(/, Landmark:/gi, '\nLandmark:')}</span>
+                      </div>
                     </div>
-                    {/* Items Preview */}
-                    {/* <div className={styles.itemsPreview}>
-                      <span className={styles.itemsLabel}>Items:</span>
-                      <span className={styles.itemsList}>
-                        {order.items.slice(0, 3).map((item, index) => (
-                          <span key={item.name + index}>
-                            {item.name}
-                            {index < Math.min(order.items.length, 3) - 1 && ', '}
-                          </span>
-                        ))}
-                        {order.items.length > 3 && ` +${order.items.length - 3} more`}
-                      </span>
-                    </div> */}
                   </div>
                 ))}
               </div>
-            )}
+            }
           </div>
         </div>
       </div>

@@ -35,6 +35,8 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
   const [collapsed, setCollapsed] = useState<{ [key: string]: boolean }>({});
 
   useEffect(() => {
+    if (menuItems.length === 0) {
+      setLoading(true);
     fetch("/api/menu")
       .then(res => {
         if (!res.ok) throw new Error("Failed to fetch menu");
@@ -54,6 +56,7 @@ const ItemsPopup: React.FC<ItemsPopupProps> = ({
         setLoading(false);
         setError("Failed to load menu. Please try again later.");
       });
+    }
   }, []);
 
   const categories = [...new Set(menuItems.map((item) => item.Course_Type))];

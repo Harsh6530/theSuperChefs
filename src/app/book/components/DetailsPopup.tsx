@@ -4,6 +4,7 @@ import type React from "react"
 import styles from "../styles/popup.module.css"
 import { X } from "lucide-react"
 import { useRouter } from 'next/navigation';
+import { useState } from "react";
 
 interface MenuItem {
   _id: string;
@@ -60,6 +61,7 @@ const BOOKING_FEE = 199;
 
 const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedItems, totalAmount, courseCounts, guestsTotal, itemsTotal, BASE_PRICE, city, waiterCount, bartenderCount, waiterTotal, bartenderTotal, coupon, address, remarks, date, time }) => {
   const router = useRouter()
+  const [showDetails, setShowDetails] = useState(false);
 
   // Calculate staff total and final total (mirroring page.tsx logic)
   const staffTotal = waiterTotal + bartenderTotal;
@@ -75,6 +77,15 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedI
       const credentialsString = localStorage.getItem("Credentials");
       const credentials = credentialsString ? JSON.parse(credentialsString) : {};
       const merchantTransactionId = `MT${Date.now()}`;
+      // Build full address with landmark on a new line if present
+      let fullAddress = address;
+      if (remarks && remarks.toLowerCase().includes("landmark")) {
+        // If landmark is in remarks, append it as a new line if not already in address
+        if (!address.toLowerCase().includes("landmark")) {
+          fullAddress = address + "\n" + remarks;
+        }
+      }
+      // Remove any ref_id or txn_id from orderData
       const orderData = {
         user: credentials.name || "",
         mobile: credentials.mobile || "",
@@ -95,7 +106,7 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedI
         bartenderCount,
         coupon,
         createdAt: new Date().toISOString(),
-        address,
+        address: fullAddress,
         remarks,
       };
 
@@ -144,54 +155,43 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedI
       </div>
 
       <div className={`${styles.popupContent} ${styles.scrollableContent}`}>
-        <div className={styles.detailsSection} style={{marginBottom: 24, paddingBottom: 10}}>
-          <h3 className={styles.detailsSectionTitle} style={{color: '#ff8c1a', fontWeight: 700, fontSize: 20, marginBottom: 10, letterSpacing: 1}}>Event Details</h3>
-          <div className={styles.detailsRow}><span style={{fontWeight: 500}}>City</span><span>{city}</span></div>
-          <div className={styles.detailsRow}><span style={{fontWeight: 500}}>Address</span><span style={{maxWidth: 220, display: 'inline-block', overflowWrap: 'break-word'}}>{address}</span></div>
-          {coupon && <div className={styles.detailsRow}><span style={{fontWeight: 500}}>Coupon</span><span>{coupon}</span></div>}
-          {remarks && <div className={styles.detailsRow}><span style={{fontWeight: 500}}>Remarks</span><span style={{maxWidth: 220, display: 'inline-block', overflowWrap: 'break-word'}}>{remarks}</span></div>}
+        {/* Event Details - align like bill rows */}
+        <div className={styles.detailsSection} style={{marginBottom: 10}}>
+          <div className={styles.detailsRow}><span style={{fontWeight: 600, color: '#ff8c1a'}}>Event Details</span></div>
+          <div className={styles.detailsRow}><span>City</span><span style={{textAlign:'right'}}>{city}</span></div>
+          <div className={styles.detailsRow}><span>Address</span><span style={{textAlign:'right', display:'block', whiteSpace:'pre-line', wordBreak:'break-word', maxWidth: 'min(60vw, 350px)', marginLeft: 'auto'}}>{address.replace(/, Landmark:/gi, '\nLandmark:')}</span></div>
+          {coupon && <div className={styles.detailsRow}><span>Coupon</span><span style={{textAlign:'right'}}>{coupon}</span></div>}
+          {remarks && <div className={styles.detailsRow}><span>Remarks</span><span style={{textAlign:'right'}}>{remarks}</span></div>}
         </div>
-
-        <div className={styles.detailsSection} style={{marginBottom: 18}}>
-          <h3 className={styles.detailsSectionTitle} style={{color: '#ff8c1a', fontWeight: 700, fontSize: 20, marginBottom: 10, letterSpacing: 1}}>Guests</h3>
-          <div className={styles.detailsRow}><span>Adults</span><span>{guests.adults} × ₹100 = ₹{guests.adults * 100}</span></div>
-          <div className={styles.detailsRow}><span>Children</span><span>{guests.children} × ₹75 = ₹{guests.children * 75}</span></div>
-          <div className={styles.detailsRow} style={{ fontWeight: 700, color: '#ff4d4f', fontSize: 18, marginTop: 4 }}>
-            <span>Guests Total</span>
-            <span>₹{guestsTotal}</span>
+        <div className={styles.detailsSection} style={{marginBottom: 8}}>
+          <div className={styles.detailsRow}><span>Base Price</span><span style={{textAlign:'right'}}>₹{BASE_PRICE}</span></div>
+        </div>
+        {guestsTotal > 0 && (
+          <div className={styles.detailsSection} style={{marginBottom: 8}}>
+            <div className={styles.detailsRow}><span>Guests Total</span><span style={{textAlign:'right'}}>₹{guestsTotal}</span></div>
           </div>
-        </div>
-
-        <div className={styles.detailsSection} style={{marginBottom: 18}}>
-          <h3 className={styles.detailsSectionTitle} style={{color: '#ff8c1a', fontWeight: 700, fontSize: 20, marginBottom: 10, letterSpacing: 1}}>Base Price</h3>
-          <div className={styles.detailsRow}><span>Base Price</span><span>₹{BASE_PRICE}</span></div>
-        </div>
-
-        <div className={styles.detailsSection} style={{marginBottom: 18}}>
-          <h3 className={styles.detailsSectionTitle} style={{color: '#ff8c1a', fontWeight: 700, fontSize: 20, marginBottom: 10, letterSpacing: 1}}>Selected Items</h3>
-          {Object.keys(COURSE_PRICES).map(course => (
-            <div className={styles.detailsRow} key={course}>
-              <span>{course}</span>
-              <span>{courseCounts[course] || 0} × ₹{COURSE_PRICES[course]} = ₹{(courseCounts[course] || 0) * COURSE_PRICES[course]}</span>
-            </div>
-          ))}
-          <div className={styles.detailsRow} style={{ fontWeight: 700, color: '#ff4d4f', fontSize: 18, marginTop: 4 }}>
-            <span>Items Total</span>
-            <span>₹{itemsTotal}</span>
+        )}
+        {itemsTotal > 0 && (
+          <div className={styles.detailsSection} style={{marginBottom: 8}}>
+            <div className={styles.detailsRow}><span>Items Total</span><span style={{textAlign:'right'}}>₹{itemsTotal}</span></div>
           </div>
-        </div>
-
-        <div className={styles.detailsSection} style={{marginBottom: 18}}>
-          <h3 className={styles.detailsSectionTitle} style={{color: '#ff8c1a', fontWeight: 700, fontSize: 20, marginBottom: 10, letterSpacing: 1}}>Staff</h3>
-          <div className={styles.detailsRow}><span>Waiters</span><span>{waiterCount} × ₹1500 = ₹{waiterCount * 1500}</span></div>
-          <div className={styles.detailsRow}><span>Bartenders</span><span>{bartenderCount} × ₹2000 = ₹{bartenderCount * 2000}</span></div>
-          <div className={styles.detailsRow} style={{ fontWeight: 700, color: '#ff4d4f', fontSize: 18, marginTop: 4 }}>
-            <span>Total Staff Price</span>
-            <span>₹{waiterCount * 1500 + bartenderCount * 2000}</span>
+        )}
+        {staffTotal > 0 && (
+          <div className={styles.detailsSection} style={{marginBottom: 8}}>
+            <div className={styles.detailsRow}><span>Additional Services</span><span style={{textAlign:'right'}}>
+              {/* {waiterCount > 0 && `Waiters: ${waiterCount}`} {waiterCount > 0 && bartenderCount > 0 && ', '} {bartenderCount > 0 && `Bartenders: ${bartenderCount}`} */}
+              {waiterCount > 0 || bartenderCount > 0 ? '₹' + staffTotal : ''}
+            </span></div>
           </div>
+        )}
+        {/* View Details button at left corner, green, italic */}
+        <div style={{textAlign:'left', margin:'12px 0'}}>
+          <button style={{background:'#eafaf1', border:'none', color:'#219653', fontStyle:'italic', fontWeight:600, fontSize:11, borderRadius:6, padding:'6px 18px', cursor:'pointer', boxShadow:'0 1px 4px rgba(44,62,80,0.04)'}} onClick={()=>setShowDetails(true)}>
+            View Details
+          </button>
         </div>
-
-        <div className={styles.totalSection} style={{marginTop: 70}}>
+        {/* Grand Total section, no grey container */}
+        <div style={{borderTop:'1.5px solid #eee', marginTop: 8, paddingTop: 16}}>
           <div className={styles.totalRow}>
             <span style={{fontWeight: 700, fontSize: 22, color: '#111'}}>Total Amount</span>
             {isCouponApplied ? (
@@ -206,7 +206,7 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedI
             )}
           </div>
           {isCouponApplied && (
-            <div className={styles.totalRow} style={{ color: '#ff9800', fontWeight: 700, fontSize: 15, marginTop: 4, marginBottom: 30, textAlign: 'right'}}>
+            <div className={styles.totalRow} style={{ color: '#ff9800', fontWeight: 700, fontSize: 15, marginTop: 4, marginBottom: 10, textAlign: 'right'}}>
               You save ₹{discountAmount} with coupon!
             </div>
           )}
@@ -222,19 +222,62 @@ const DetailsPopup: React.FC<DetailsPopupProps> = ({ setPopup, guests, selectedI
           }}>
             The booking fee of ₹{BOOKING_FEE} will be deducted from your final bill
           </div>
-          {/* <div style={{
-            color: '#219653',
-            fontSize: '14px',
-            marginTop: '12px',
-            textAlign: 'center',
-            backgroundColor: '#eafaf1',
-            borderRadius: '4px',
-            border: '1px solid #b7eacb',
-            padding: '8px'
-          }}>
-            After paying the booking amount, you will receive a call within 60 minutes for confirmation and to convey the ingredients.
-          </div> */}
         </div>
+        {/* Details Modal */}
+        {showDetails && (
+          <div style={{position:'fixed', top:0, left:0, width:'100vw', height:'100vh', background:'rgba(0,0,0,0.25)', zIndex:10000, display:'flex', alignItems:'center', justifyContent:'center'}}>
+            <div style={{background:'#fff', borderRadius:12, boxShadow:'0 4px 24px rgba(0,0,0,0.15)', padding:32, minWidth:520, maxWidth:700, position:'relative', maxHeight:'80vh', overflow:'auto'}}>
+              <button style={{position:'absolute', top:12, right:12, background:'none', border:'none', fontSize:22, cursor:'pointer'}} onClick={()=>setShowDetails(false)}>&times;</button>
+              <h3 style={{color:'#219653', fontWeight:700, fontSize:22, marginBottom:18, textAlign:'center', letterSpacing:1}}>Detailed Bill</h3>
+              {/* Bill-style breakdown, right-aligned amounts, headings colored, broader popup, only show non-zero sections */}
+              {BASE_PRICE > 0 && (
+                <div style={{marginBottom:10}}>
+                  <div style={{fontWeight:600, color:'#ff8c1a', marginBottom:4}}>Base Price</div>
+                  <div className={styles.detailsRow}><span>Base Price</span><span style={{textAlign:'right'}}><b>₹{BASE_PRICE}</b></span></div>
+                </div>
+              )}
+              {guestsTotal > 0 && (
+                <div style={{marginBottom:10}}>
+                  <div style={{fontWeight:600, color:'#ff8c1a', marginBottom:4}}>Guests</div>
+                  {guests.adults > 0 && <div className={styles.detailsRow}><span>Adults</span><span style={{textAlign:'right'}}>{guests.adults} * ₹100 = ₹{guests.adults * 100}</span></div>}
+                  {guests.children > 0 && <div className={styles.detailsRow}><span>Children</span><span style={{textAlign:'right'}}>{guests.children} * ₹75 = ₹{guests.children * 75}</span></div>}
+                  <div className={styles.detailsRow}><span style={{fontWeight:600}}>Total</span><span style={{textAlign:'right'}}><b>₹{guestsTotal}</b></span></div>
+                </div>
+              )}
+              {itemsTotal > 0 && (
+                <div style={{marginBottom:10}}>
+                  <div style={{fontWeight:600, color:'#ff8c1a', marginBottom:4}}>Items</div>
+                  {selectedItems.length > 0 && selectedItems.map((item, idx) => {
+                    const price = COURSE_PRICES[COURSE_LABELS[item.Course_Type] || item.Course_Type] || 0;
+                    if (price === 0) return null;
+                    return (
+                      <div className={styles.detailsRow} key={item._id || idx}>
+                        <span>{item.Dish_Name}</span>
+                        <span style={{textAlign:'right'}}>1 * ₹{price} = ₹{price}</span>
+                      </div>
+                    );
+                  })}
+                  <div className={styles.detailsRow}><span style={{fontWeight:600}}>Total</span><span style={{textAlign:'right'}}><b>₹{itemsTotal}</b></span></div>
+                </div>
+              )}
+              {staffTotal > 0 && (
+                <div style={{marginBottom:10}}>
+                  <div style={{fontWeight:600, color:'#ff8c1a', marginBottom:4}}>Additional Services</div>
+                  {waiterCount > 0 && <div className={styles.detailsRow}><span>Waiters</span><span style={{textAlign:'right'}}>{waiterCount} * ₹1500 = ₹{waiterCount * 1500}</span></div>}
+                  {bartenderCount > 0 && <div className={styles.detailsRow}><span>Bartenders</span><span style={{textAlign:'right'}}>{bartenderCount} * ₹2000 = ₹{bartenderCount * 2000}</span></div>}
+                  <div className={styles.detailsRow}><span style={{fontWeight:600}}>Total</span><span style={{textAlign:'right'}}><b>₹{staffTotal}</b></span></div>
+                </div>
+              )}
+              <div style={{borderTop:'1.5px solid #eee', marginTop:18, paddingTop:12}}>
+                <div className={styles.detailsRow}>
+                  <span style={{fontWeight:700, fontSize:18, color:'#111'}}>Grand Total</span>
+                  <span style={{fontWeight:700, fontSize:18, color:'#111', textAlign:'right'}}>₹{isCouponApplied ? discountedTotal : subtotal}</span>
+                </div>
+                {isCouponApplied && <div style={{color:'#ff9800', fontWeight:600, fontSize:14, marginTop:4, textAlign:'right'}}>You save ₹{discountAmount} with coupon!</div>}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className={styles.popupFooter}>
