@@ -23,6 +23,11 @@ export default function RootLayout({
   
   return (
     <html lang="en">
+      <head>
+        <title>SuperChefs - Expert Chefs & Gourmet Catering for Every Occasion</title>
+        <meta name="description" content="SuperChefs brings expert chefs, customized menus, and a flawless dining experience, turning every meal into a gourmet celebration. Book a chef for your next event!" />
+        <link rel="icon" type="image/png" href="/favicon1.png" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         style={{ background: '#fff' }}>
